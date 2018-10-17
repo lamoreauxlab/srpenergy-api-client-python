@@ -7,7 +7,9 @@ Use
 ############
 
 .. code-block:: python
+
     from srpenergy.client import SrpEnergyClient
+
     username = 'your username'
     password = 'your password'
     client = SrpEnergyClient(username, password)
