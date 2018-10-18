@@ -97,32 +97,33 @@ class SrpEnergyClient(object):
             str_startdate = startdate.strftime("%m/%d/%Y")
             str_enddate = enddate.strftime("%m/%d/%Y")
 
-            s = requests.session()
+            with requests.Session() as s:
 
-            result = s.get('https://www.srpnet.com/')
-            result = s.post(
-                'https://myaccount.srpnet.com/sso/login/loginuser',
-                data={'UserName': self.username, 'Password': self.password})
-            result = s.get(BASE_USAGE_URL)
-            result = s.get(
-                BASE_USAGE_URL + '/ExportToExcel?billAccount=' +
-                self.accountid +
-                '&viewDataType=KwhUsage&reportOption=Hourly&startDate=' +
-                str_startdate + '&endDate=' + str_enddate +
-                '&displayCost=false')
+                result = s.get('https://www.srpnet.com/')
+                result = s.post(
+                    'https://myaccount.srpnet.com/sso/login/loginuser',
+                    data={'UserName': self.username, 'Password': self.password}
+                    )
+                result = s.get(BASE_USAGE_URL)
+                result = s.get(
+                    BASE_USAGE_URL + '/ExportToExcel?billAccount=' +
+                    self.accountid +
+                    '&viewDataType=KwhUsage&reportOption=Hourly&startDate=' +
+                    str_startdate + '&endDate=' + str_enddate +
+                    '&displayCost=false')
 
-            resultString = result.content.decode("utf-8")
-            rows = resultString.split('\r\n')
+                resultString = result.content.decode("utf-8")
+                rows = resultString.split('\r\n')
 
-            usage = []
-            for r in rows[1:-1]:
-                row = r.split(',')
-                values = (
-                    row[0], row[1], self._get_iso_time(row), row[2],
-                    self._strip_currency(row[3]))
-                usage.append(values)
+                usage = []
+                for r in rows[1:-1]:
+                    row = r.split(',')
+                    values = (
+                        row[0], row[1], self._get_iso_time(row), row[2],
+                        self._strip_currency(row[3]))
+                    usage.append(values)
 
-            return usage
+                return usage
 
         except Exception as ex:
             raise ex
