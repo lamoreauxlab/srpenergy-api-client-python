@@ -2,6 +2,7 @@
 Lamoreaux Lab Srp Energy Developer APIs - Python
 *******************
 .. image:: https://travis-ci.org/lamoreauxlab/srpenergy-api-client-python.svg?branch=master
+    :target: https://travis-ci.org/lamoreauxlab/srpenergy-api-client-python
     
 An unofficial Python module for interacting with Srp Energy data.
 
