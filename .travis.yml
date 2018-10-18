@@ -9,4 +9,4 @@ install:
   - python setup.py install
 
 script:
- - pyTest
+ - python -m unittest test/test_client.py
