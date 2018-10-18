@@ -25,7 +25,7 @@ setup(
     keywords="energy API wrapper srp",
     url="https://github.com/lamoreauxlab/srpenergy-api-client-python",
     packages=['srpenergy'],
-    package_data={'srpenergy': ['LICENSE.txt', 'README.rst']},
+    package_data={'srpenergy': ['LICENSE', 'README.rst']},
     long_description=open('README.rst').read(),
-    install_requires=['requests>=1.6', 'responses'],
+    install_requires=['requests>=1.6'],
 )

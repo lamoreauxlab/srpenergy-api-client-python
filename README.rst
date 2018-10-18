@@ -13,4 +13,4 @@ Use
     username = 'your username'
     password = 'your password'
     client = SrpEnergyClient(username, password)
-    usage = client.get_usage(start_date, end_date)
+    usage = client.usage(start_date, end_date)
