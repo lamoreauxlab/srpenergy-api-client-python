@@ -1,8 +1,8 @@
 import os
 import unittest
 from srpenergy.client import SrpEnergyClient
-
 from datetime import datetime, timedelta
+
 
 class TestGetUsage(unittest.TestCase):
 
@@ -24,40 +24,44 @@ class TestGetUsage(unittest.TestCase):
 
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
-        with self.assertRaises(ValueError):  client.get_usage("20181001", end_date)
+        with self.assertRaises(ValueError):
+            client.usage("20181001", end_date)
 
     def test_badParameterEndDateString(self):
-        
+
         start_date = datetime(2018, 10, 5, 12, 0, 0)
 
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
-        with self.assertRaises(ValueError): client.get_usage(start_date, "20181001")
+        with self.assertRaises(ValueError):
+            client.usage(start_date, "20181001")
 
-    def test_badParameterStartDateAfterNow(self):   
-        
+    def test_badParameterStartDateAfterNow(self):
+
         start_date = datetime.now() + timedelta(days=10)
         end_date = datetime(2018, 10, 5, 12, 0, 0)
 
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
-        with self.assertRaises(ValueError): client.get_usage(start_date, end_date)
+        with self.assertRaises(ValueError):
+            client.usage(start_date, end_date)
 
-    def test_badParameterStartDateAfterEndDate(self):   
-        
+    def test_badParameterStartDateAfterEndDate(self):
+
         start_date = datetime(2018, 10, 6, 12, 0, 0)
         end_date = datetime(2018, 10, 5, 12, 0, 0)
 
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
-        with self.assertRaises(ValueError): client.get_usage(start_date, end_date)
-      
+        with self.assertRaises(ValueError):
+            client.usage(start_date, end_date)
+
     def test_getUsage(self):
 
         start_date = datetime(2018, 10, 1, 6, 0, 0)
         end_date = datetime(2018, 10, 5, 12, 0, 0)
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
-        usage = client.get_usage(start_date, end_date)
-        
+        usage = client.usage(start_date, end_date)
+
         self.assertEqual(len(usage), 120)

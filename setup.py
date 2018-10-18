@@ -19,7 +19,8 @@ setup(
     version="1.0dev",
     author="Lamoreaux Lab",
     author_email="bklamoreaux@gmail.com",
-    description=("An unofficial Python module for interacting with Srp Energy data"),
+    description=(
+        "An unofficial Python module for interacting with Srp Energy data"),
     license="MIT",
     keywords="energy API wrapper srp",
     url="https://github.com/lamoreauxlab/srpenergy-api-client-python",
