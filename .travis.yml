@@ -11,4 +11,6 @@ install:
 script:
  - coverage run --omit */site-packages/* -m unittest test/test_client.py
 
-after_success: coverage report
+after_success: 
+ - coverage report
+ - coveralls

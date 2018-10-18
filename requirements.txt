@@ -1,2 +1,5 @@
 request
+
+# Dev Requirements
 coverage
+coveralls
