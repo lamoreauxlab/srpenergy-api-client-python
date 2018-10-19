@@ -36,18 +36,18 @@ class SrpEnergyClient(object):
         self.username = username
         self.password = password
 
-    def _strip_currency(self, str):
+    def _strip_currency(self, val):
 
-        return str.replace('$', '')
+        return val.replace('$', '')
 
-    def _get_iso_time(self, row):
+    def _get_iso_time(self, date_part, time_part):
 
-        strDate = datetime.datetime.strptime(
-            row[0], '%m/%d/%Y').strftime('%Y-%m-%d')
-        strTime = datetime.datetime.strptime(
-            row[1], '%I:%M %p').strftime('%H:%M:%S')
+        str_date = datetime.datetime.strptime(
+            date_part, '%m/%d/%Y').strftime('%Y-%m-%d')
+        str_time = datetime.datetime.strptime(
+            time_part, '%I:%M %p').strftime('%H:%M:%S')
 
-        return strDate + "T" + strTime + "-7:00"
+        return str_date + "T" + str_time + "-7:00"
 
     def usage(self, startdate, enddate):
         r"""Get the energy usage for a given date range.
@@ -89,7 +89,7 @@ class SrpEnergyClient(object):
         ('9/19/2018', '11:00 PM', '2018-09-19T23:00:00-7:00', '0.4', '0.09')
         ]
         """
-        BASE_USAGE_URL = "https://myaccount.srpnet.com/MyAccount/Usage/"
+        base_usage_url = "https://myaccount.srpnet.com/MyAccount/Usage/"
 
         # Validate parameters
         if not isinstance(startdate, datetime.datetime):
@@ -114,30 +114,29 @@ class SrpEnergyClient(object):
             str_startdate = startdate.strftime('%m/%d/%Y')
             str_enddate = enddate.strftime('%m/%d/%Y')
 
-            with requests.Session() as s:
+            with requests.Session() as session:
 
-                result = s.get('https://www.srpnet.com/')
-                result = s.post(
+                result = session.get('https://www.srpnet.com/')
+                result = session.post(
                     'https://myaccount.srpnet.com/sso/login/loginuser',
                     data={'UserName': self.username, 'Password': self.password}
                     )
-                result = s.get(BASE_USAGE_URL)
-                result = s.get(
-                    BASE_USAGE_URL + '/ExportToExcel?billAccount=' +
+                result = session.get(base_usage_url)
+                result = session.get(
+                    base_usage_url + '/ExportToExcel?billAccount=' +
                     self.accountid +
                     '&viewDataType=KwhUsage&reportOption=Hourly&startDate=' +
                     str_startdate + '&endDate=' + str_enddate +
                     '&displayCost=false')
 
-                resultString = result.content.decode('utf-8')
-                rows = resultString.split('\r\n')
+                rows = result.content.decode('utf-8').split('\r\n')
 
                 usage = []
-                for r in rows[1:-1]:
-                    row = r.split(',')
+                for row in rows[1:-1]:
+                    str_date, str_time, str_kwh, str_cost = row.split(',')
                     values = (
-                        row[0], row[1], self._get_iso_time(row), row[2],
-                        self._strip_currency(row[3]))
+                        str_date, str_time, self._get_iso_time(str_date, str_time), str_kwh,
+                        self._strip_currency(str_cost))
                     usage.append(values)
 
                 return usage
