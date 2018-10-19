@@ -65,3 +65,18 @@ class TestGetUsage(unittest.TestCase):
         usage = client.usage(start_date, end_date)
 
         self.assertEqual(len(usage), 120)
+
+    def test_singlDayUsageKw(self):
+
+        start_date = datetime(2018, 9, 19, 0, 0, 0)
+        end_date = datetime(2018, 9, 19, 23, 0, 0)
+        client = SrpEnergyClient(self.accountid, self.username, self.password)
+
+        usage = client.usage(start_date, end_date)
+
+        self.assertEqual(len(usage), 24)
+
+        date, hour, isodate, kwh, cost = usage[0]
+
+        self.assertEqual(kwh, "1.2")
+        self.assertEqual(cost, "0.17")

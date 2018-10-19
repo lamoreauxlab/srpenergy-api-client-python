@@ -3,3 +3,5 @@ request
 # Dev Requirements
 coverage
 coveralls
+sphinx_rtd_theme
+numpydoc
