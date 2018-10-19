@@ -21,6 +21,7 @@ def read(fname):
 
     return contents
 
+
 setup(
     name='srpenergy',
     version=version,
