@@ -15,13 +15,13 @@
 import os
 import sys
 import re
-import srpenergy
+
 
 sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
-
+import srpenergy
 project = 'srpenergy'
 copyright = '2018, Lamoreaux Lab'
 author = 'Brig Lamoreaux'
