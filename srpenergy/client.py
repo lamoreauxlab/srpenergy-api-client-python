@@ -111,8 +111,8 @@ class SrpEnergyClient(object):
         try:
 
             # Convert datetime to strings
-            str_startdate = startdate.strftime("%m/%d/%Y")
-            str_enddate = enddate.strftime("%m/%d/%Y")
+            str_startdate = startdate.strftime('%m/%d/%Y')
+            str_enddate = enddate.strftime('%m/%d/%Y')
 
             with requests.Session() as s:
 
@@ -129,7 +129,7 @@ class SrpEnergyClient(object):
                     str_startdate + '&endDate=' + str_enddate +
                     '&displayCost=false')
 
-                resultString = result.content.decode("utf-8")
+                resultString = result.content.decode('utf-8')
                 rows = resultString.split('\r\n')
 
                 usage = []

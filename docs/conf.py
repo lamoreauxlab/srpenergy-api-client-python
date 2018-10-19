@@ -23,8 +23,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 import srpenergy
 project = 'srpenergy'
-copyright = '2018, Lamoreaux Lab'
-author = 'Brig Lamoreaux'
+copyright = "2018, Lamoreaux Lab"
+author = "Brig Lamoreaux"
 
 # The short X.Y version
 version = '1.0'
@@ -139,8 +139,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'srpenergy.tex', 'srpenergy Documentation',
-     'Brig Lamoreaux', 'manual'),
+    (master_doc, 'srpenergy.tex', "srpenergy Documentation",
+     "Brig Lamoreaux", 'manual'),
 ]
 
 
@@ -149,7 +149,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'srpenergy', 'srpenergy Documentation',
+    (master_doc, 'srpenergy', "srpenergy Documentation",
      [author], 1)
 ]
 
@@ -160,8 +160,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'srpenergy', 'srpenergy Documentation',
-     author, 'srpenergy', 'One line description of project.',
+    (master_doc, 'srpenergy', "srpenergy Documentation",
+     author, 'srpenergy',
+     "An unofficial Python module for interacting with Srp Energy data.",
      'Miscellaneous'),
 ]
 

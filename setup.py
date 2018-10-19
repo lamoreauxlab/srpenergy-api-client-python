@@ -8,7 +8,7 @@ except ImportError:
     from distutils.core import setup
 
 if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
+    os.system("python setup.py sdist upload")
     sys.exit()
 
 
@@ -22,16 +22,16 @@ def read(fname):
     return contents
 
 setup(
-    name="srpenergy",
+    name='srpenergy',
     version=version,
     author="Lamoreaux Lab",
-    author_email="bklamoreaux@gmail.com",
+    author_email='bklamoreaux@gmail.com',
     description=(
         "An unofficial Python module for interacting with Srp Energy data"),
     long_description=read('README.rst'),
-    license="MIT",
+    license='MIT',
     keywords="energy API wrapper srp",
-    url="https://github.com/lamoreauxlab/srpenergy-api-client-python",
+    url='https://github.com/lamoreauxlab/srpenergy-api-client-python',
     packages=['srpenergy'],
     package_data={'srpenergy': ['LICENSE', 'README.rst']},
     install_requires=['requests>=1.6'],

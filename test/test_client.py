@@ -8,12 +8,12 @@ class TestGetUsage(unittest.TestCase):
 
     def setUp(self):
 
-        self.accountid = os.environ.get("SRPENERGY_ACCOUNT_ID")
-        self.username = os.environ.get("SRPENERGY_USERNAME")
-        self.password = os.environ.get("SRPENERGY_PASSWORD")
+        self.accountid = os.environ.get('SRPENERGY_ACCOUNT_ID')
+        self.username = os.environ.get('SRPENERGY_USERNAME')
+        self.password = os.environ.get('SRPENERGY_PASSWORD')
 
     def test_hasAccountId(self):
-        self.assertTrue("SRPENERGY_ACCOUNT_ID" in os.environ)
+        self.assertTrue('SRPENERGY_ACCOUNT_ID' in os.environ)
 
     def test_getEnvironment(self):
         self.assertIsNotNone(self.accountid)
@@ -25,7 +25,7 @@ class TestGetUsage(unittest.TestCase):
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
         with self.assertRaises(ValueError):
-            client.usage("20181001", end_date)
+            client.usage('20181001', end_date)
 
     def test_badParameterEndDateString(self):
 
@@ -34,7 +34,7 @@ class TestGetUsage(unittest.TestCase):
         client = SrpEnergyClient(self.accountid, self.username, self.password)
 
         with self.assertRaises(ValueError):
-            client.usage(start_date, "20181001")
+            client.usage(start_date, '20181001')
 
     def test_badParameterStartDateAfterNow(self):
 
@@ -78,5 +78,5 @@ class TestGetUsage(unittest.TestCase):
 
         date, hour, isodate, kwh, cost = usage[0]
 
-        self.assertEqual(kwh, "1.2")
-        self.assertEqual(cost, "0.17")
+        self.assertEqual(kwh, '1.2')
+        self.assertEqual(cost, '0.17')
