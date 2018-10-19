@@ -9,7 +9,8 @@ import requests
 
 
 class SrpEnergyClient(object):
-    """
+    r"""SrpEnergyClient(accountid, username, password)
+
     Client used to fetch srp energy usage.
 
     Parameters
@@ -49,7 +50,7 @@ class SrpEnergyClient(object):
         return strDate + "T" + strTime + "-7:00"
 
     def usage(self, startdate, enddate):
-        """Get the energy usage for a given date range.
+        r"""Get the energy usage for a given date range.
 
         Parameters
         ----------
@@ -66,11 +67,27 @@ class SrpEnergyClient(object):
         Raises
         ------
         ValueError
-            If ``startdate`` or ``enddate`` are not datetime.
-        ValueError
-            If ``startdate`` is greater than ``enddate``.
-        ValueError
-            If ``startdate`` is greater than now.
+            If ``startdate`` or ``enddate`` are not datetime,
+            or if ``startdate`` is greater than ``enddate``,
+            or if ``startdate`` is greater than now.
+
+        Examples
+        --------
+        Get the hourly usage for a given day.
+
+        >>> start_date = datetime(2018, 9, 19, 0, 0, 0)
+        >>> end_date = datetime(2018, 9, 19, 23, 0, 0)
+        >>> usage = client.usage(start_date, end_date)
+        >>> print(usage)
+        [
+        ('9/19/2018', '12:00 AM', '2018-09-19T00:00:00-7:00', '1.2', '0.17'),
+        ('9/19/2018', '1:00 AM', '2018-09-19T01:00:00-7:00', '2.1', '0.30'),
+        ('9/19/2018', '2:00 AM', '2018-09-19T02:00:00-7:00', '1.5', '0.23'),
+        ...
+        ('9/19/2018', '9:00 PM', '2018-09-19T21:00:00-7:00', '1.2', '0.19'),
+        ('9/19/2018', '10:00 PM', '2018-09-19T22:00:00-7:00', '1.1', '0.18'),
+        ('9/19/2018', '11:00 PM', '2018-09-19T23:00:00-7:00', '0.4', '0.09')
+        ]
         """
         BASE_USAGE_URL = "https://myaccount.srpnet.com/MyAccount/Usage/"
 
