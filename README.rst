@@ -11,6 +11,18 @@ Srp Energy Developer APIs - Python
     :target: https://srpenergy-api-client-python.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://requires.io/github/lamoreauxlab/srpenergy-api-client-python/requirements.svg?branch=master
+    :target: https://requires.io/github/lamoreauxlab/srpenergy-api-client-python/requirements/?branch=master
+    :alt: Requirements Status
+
+.. image:: https://badge.fury.io/py/srpenergy.svg
+    :target: https://badge.fury.io/py/srpenergy
+    :alt: Latest version on PyPi
+
+.. image:: https://img.shields.io/pypi/pyversions/srpenergy.svg
+    :target: https://pypi.org/project/srpenergy/
+    :alt: Supported Python versions
+
 The ``srpenergy`` module is an unofficial Python module for interacting with Srp_ Energy data.
 
 - Development: https://github.com/lamoreauxlab/srpenergy-api-client-python/

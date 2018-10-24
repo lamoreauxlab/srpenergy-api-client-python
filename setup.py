@@ -36,4 +36,5 @@ setup(
     packages=['srpenergy'],
     package_data={'srpenergy': ['LICENSE', 'README.rst']},
     install_requires=['requests>=1.6'],
+    python_requires=">=2.7, >=3.6.*",
 )
