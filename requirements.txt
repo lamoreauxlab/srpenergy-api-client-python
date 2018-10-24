@@ -5,3 +5,5 @@ coverage
 coveralls
 sphinx_rtd_theme
 numpydoc
+pytest
+pytest-cov
