@@ -80,3 +80,57 @@ class TestGetUsage(unittest.TestCase):
 
         self.assertEqual(kwh, '1.2')
         self.assertEqual(cost, '0.17')
+
+    def test_latestDayUsageKw(self):
+
+        start_date = datetime(2018, 9, 19, 0, 0, 0)
+        end_date = datetime(2018, 9, 19, 23, 0, 0)
+        client = SrpEnergyClient(self.accountid, self.username, self.password)
+
+        usage = client.usage(start_date, end_date)
+
+        self.assertEqual(len(usage), 24)
+
+        date, hour, isodate, kwh, cost = usage[-1]
+
+        self.assertEqual(kwh, '0.4')
+        self.assertEqual(cost, '0.09')
+
+    def test_none_accountid(self):
+        
+        with self.assertRaises(TypeError):
+            client = SrpEnergyClient(None, 'b', 'c')
+
+    def test_none_username(self):
+        
+        with self.assertRaises(TypeError):
+            client = SrpEnergyClient('a', None, 'c')
+    
+    def test_none_password(self):
+
+        with self.assertRaises(TypeError):
+            client = SrpEnergyClient('a', 'b', None)
+
+    def test_blank_accountid(self):
+
+        with self.assertRaises(ValueError):
+            client = SrpEnergyClient('', 'b', 'c')
+    
+    def test_blank_username(self):
+
+        with self.assertRaises(ValueError):
+             client = SrpEnergyClient('a', '', 'c')
+
+    def test_blank_password(self):
+
+        with self.assertRaises(ValueError):
+            client = SrpEnergyClient('a', 'b', '')
+
+    def test_bad_crendentials(self):
+
+        start_date = datetime(2018, 9, 19, 0, 0, 0)
+        end_date = datetime(2018, 9, 19, 23, 0, 0)
+        client = SrpEnergyClient('a', 'b', 'c')
+
+        with self.assertRaises(TypeError):
+            client.usage(start_date, end_date)
