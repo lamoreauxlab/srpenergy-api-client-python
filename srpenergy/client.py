@@ -30,8 +30,25 @@ class SrpEnergyClient(object):
 
     def __init__(self, accountid, username, password):
 
-        # Validate paramters
+        # Validate parameters
+        if accountid is None:
+            raise TypeError("Parameter account can not be none.")
+        
+        if username is None:
+            raise TypeError("Parameter username can not be none.")
 
+        if password is None:
+            raise TypeError("Parameter password can not be none.")
+
+        if len(accountid) <= 0:
+            raise ValueError("Parameter accountid must have length greater than 0.")
+        
+        if len(username) <= 0:
+            raise ValueError("Parameter username must have length greater than 0.")
+        
+        if len(password) <= 0:
+            raise ValueError("Parameter password must have length greater than 0.")
+        
         self.accountid = accountid
         self.username = username
         self.password = password
@@ -130,6 +147,10 @@ class SrpEnergyClient(object):
                     '&displayCost=false')
 
                 rows = result.content.decode('utf-8').split('\r\n')
+
+                if rows[0] == '<!DOCTYPE html>':
+                    raise TypeError(
+                            "Expected csv but received html.") 
 
                 usage = []
                 for row in rows[1:-1]:
