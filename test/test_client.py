@@ -134,3 +134,16 @@ class TestGetUsage(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             client.usage(start_date, end_date)
+
+    def test_valid_crendentials(self):
+
+        client = SrpEnergyClient(self.accountid, self.username, self.password)
+
+        self.assertTrue(client.validate())
+
+    
+    def test_invalid_crendentials(self):
+
+        client = SrpEnergyClient('a', 'b', 'c')
+
+        self.assertFalse(client.validate())

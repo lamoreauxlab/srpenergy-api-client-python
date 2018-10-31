@@ -6,6 +6,7 @@ This module houses the main class used to fetch energy usage.
 
 import datetime
 import requests
+from bs4 import BeautifulSoup
 
 
 class SrpEnergyClient(object):
@@ -65,6 +66,53 @@ class SrpEnergyClient(object):
             time_part, '%I:%M %p').strftime('%H:%M:%S')
 
         return str_date + "T" + str_time + "-7:00"
+
+    def validate(self):
+        r"""Validate user credentials.
+
+        Returns
+        -------
+        bool
+
+        Examples
+        --------
+        Validate credentials.
+
+        >>> from srpenergy.client import SrpEnergyClient
+        >>>
+        >>> accountid = 'your account id'
+        >>> username = 'your username'
+        >>> password = 'your password'
+        >>> client = SrpEnergyClient(accountid, username, password)
+        >>> 
+        >>> valid = client.validate()
+        >>> print(valid)
+        True
+        """
+        try:
+
+            with requests.Session() as session:
+
+                result = session.get('https://www.srpnet.com/')
+                result = session.post(
+                    'https://myaccount.srpnet.com/sso/login/loginuser',
+                    data={'UserName': self.username, 'Password': self.password}
+                    )
+                resultString = result.content.decode("utf-8") 
+                soup = BeautifulSoup(resultString)
+                accountSelect = soup.find('select', attrs={'name': 'accountNumber'})
+                
+                accounts = []
+                for o in accountSelect.find_all('option'):
+                    if o['value'] != 'newAccount':
+                        accounts.append(o['value'])
+                
+                valid = len(accounts) > 0
+
+                return valid
+
+        except Exception:
+            return False
 
     def usage(self, startdate, enddate):
         r"""Get the energy usage for a given date range.
