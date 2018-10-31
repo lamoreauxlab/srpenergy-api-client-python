@@ -64,8 +64,9 @@ Use
 
     from srpenergy.client import SrpEnergyClient
 
+    accountid = 'your account id'
     username = 'your username'
     password = 'your password'
-    client = SrpEnergyClient(username, password)
+    client = SrpEnergyClient(accountid, username, password)
     usage = client.usage(start_date, end_date)
     date, hour, isodate, kwh, cost = usage[0]
