@@ -35,5 +35,5 @@ setup(
     url='https://github.com/lamoreauxlab/srpenergy-api-client-python',
     packages=['srpenergy'],
     package_data={'srpenergy': ['LICENSE', 'README.rst']},
-    install_requires=['requests>=1.6']
+    install_requires=['requests>=1.6', 'beautifulsoup4>=4.5']
 )
