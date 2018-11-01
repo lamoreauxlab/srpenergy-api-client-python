@@ -1,16 +1,43 @@
+#!/usr/bin/env python3
+"""Srp Energy setup script."""
 import os
 import sys
+from datetime import datetime as dt
 from srpenergy import __version__ as version
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup, find_packages
 
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist upload")
     sys.exit()
 
+PROJECT_NAME = 'Srp Energy'
+PROJECT_PACKAGE_NAME = 'srpenergy'
+PROJECT_LICENSE = 'MIT'
+PROJECT_AUTHOR = 'Lamoreaux Lab'
+PROJECT_COPYRIGHT = ' 2018-{}, {}'.format(dt.now().year, PROJECT_AUTHOR)
+PROJECT_URL = 'https://github.com/lamoreauxlab/srpenergy-api-client-python'
+PROJECT_EMAIL = 'bklamoreaux@gmail.com'
+
+PROJECT_GITHUB_USERNAME = 'lamoreauxlab'
+PROJECT_GITHUB_REPOSITORY = 'srpenergy-api-client-python'
+
+GITHUB_PATH = '{}/{}'.format(
+    PROJECT_GITHUB_USERNAME, PROJECT_GITHUB_REPOSITORY)
+GITHUB_URL = 'https://github.com/{}'.format(GITHUB_PATH)
+
+PROJECT_URLS = {
+    'Bug Reports': '{}/issues'.format(GITHUB_URL),
+    'Dev Docs': 'https://srpenergy-api-client-python.readthedocs.io/en/latest/',
+}
+
+PACKAGES = find_packages(exclude=['tests', 'tests.*'])
+
+REQUIRES = [
+    'requests>=1.6',
+    'beautifulsoup4>=4.5',
+]
+
+MIN_PY_VERSION = '3.5.3'
 
 def read(fname):
     """Utility function to get README.rst into long_description.
@@ -21,19 +48,24 @@ def read(fname):
 
     return contents
 
-
 setup(
-    name='srpenergy',
-    version=version,
-    author="Lamoreaux Lab",
-    author_email='bklamoreaux@gmail.com',
+    name=PROJECT_PACKAGE_NAME,
+    version=version,    
+    url=PROJECT_URL,
+    project_urls=PROJECT_URLS,
+    author=PROJECT_AUTHOR,
+    author_email=PROJECT_EMAIL,
+    packages=PACKAGES,
+    install_requires=REQUIRES,
+    python_requires='>={}'.format(MIN_PY_VERSION),
     description=(
         "An unofficial Python module for interacting with Srp Energy data"),
     long_description=read('README.rst'),
     license='MIT',
-    keywords="energy API wrapper srp",
-    url='https://github.com/lamoreauxlab/srpenergy-api-client-python',
-    packages=['srpenergy'],
-    package_data={'srpenergy': ['LICENSE', 'README.rst']},
-    install_requires=['requests>=1.6', 'beautifulsoup4>=4.5']
+    keywords="energy API wrapper srp",    
+    package_data={
+        'srpenergy': [
+            'LICENSE', 'README.rst'
+        ]
+    },
 )
