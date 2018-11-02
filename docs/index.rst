@@ -4,3 +4,4 @@ Documentation
 =============
 .. toctree::
     module
+    develop
