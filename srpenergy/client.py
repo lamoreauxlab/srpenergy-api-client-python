@@ -99,7 +99,7 @@ class SrpEnergyClient(object):
                     data={'UserName': self.username, 'Password': self.password}
                     )
                 resultString = result.content.decode("utf-8") 
-                soup = BeautifulSoup(resultString)
+                soup = BeautifulSoup(resultString, "html.parser")
                 accountSelect = soup.find('select', attrs={'name': 'accountNumber'})
                 
                 accounts = []
