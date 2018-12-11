@@ -202,7 +202,8 @@ class SrpEnergyClient(object):
 
                 usage = []
                 for row in rows[1:-1]:
-                    str_date, str_time, str_kwh, str_cost = row.split(',')
+                    fields = row.split(',')
+                    str_date, str_time, str_kwh, str_cost = fields[0],fields[1],fields[2],fields[3]
                     values = (
                         str_date, str_time, self._get_iso_time(str_date, str_time), str_kwh,
                         self._strip_currency(str_cost))
