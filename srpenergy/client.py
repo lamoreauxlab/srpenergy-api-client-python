@@ -9,8 +9,23 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class SrpEnergyClient(object):
-    r"""SrpEnergyClient(accountid, username, password)
+def strip_currency(val):
+    r"""Return a value without a dollary symbol $."""
+    return val.replace('$', '')
+
+
+def get_iso_time(date_part, time_part):
+    r"""Combign date and time into an iso datetime."""
+    str_date = datetime.datetime.strptime(
+        date_part, '%m/%d/%Y').strftime('%Y-%m-%d')
+    str_time = datetime.datetime.strptime(
+        time_part, '%I:%M %p').strftime('%H:%M:%S')
+
+    return str_date + "T" + str_time + "-7:00"
+
+
+class SrpEnergyClient():
+    r"""SrpEnergyClient(accountid, username, password).
 
     Client used to fetch srp energy usage.
 
@@ -27,45 +42,36 @@ class SrpEnergyClient(object):
     -------
     usage(startdate, enddate)
         Get the usage for a given date range.
+
     """
 
-    def __init__(self, accountid, username, password):
+    def __init__(self, accountid, username, password):  # noqa: D107
 
         # Validate parameters
         if accountid is None:
             raise TypeError("Parameter account can not be none.")
-        
+
         if username is None:
             raise TypeError("Parameter username can not be none.")
 
         if password is None:
             raise TypeError("Parameter password can not be none.")
 
-        if len(accountid) <= 0:
-            raise ValueError("Parameter accountid must have length greater than 0.")
-        
-        if len(username) <= 0:
-            raise ValueError("Parameter username must have length greater than 0.")
-        
-        if len(password) <= 0:
-            raise ValueError("Parameter password must have length greater than 0.")
-        
+        if not accountid:
+            raise ValueError(
+                "Parameter accountid must have length greater than 0.")
+
+        if not username:
+            raise ValueError(
+                "Parameter username must have length greater than 0.")
+
+        if not password:
+            raise ValueError(
+                "Parameter password must have length greater than 0.")
+
         self.accountid = accountid
         self.username = username
         self.password = password
-
-    def _strip_currency(self, val):
-
-        return val.replace('$', '')
-
-    def _get_iso_time(self, date_part, time_part):
-
-        str_date = datetime.datetime.strptime(
-            date_part, '%m/%d/%Y').strftime('%Y-%m-%d')
-        str_time = datetime.datetime.strptime(
-            time_part, '%I:%M %p').strftime('%H:%M:%S')
-
-        return str_date + "T" + str_time + "-7:00"
 
     def validate(self):
         r"""Validate user credentials.
@@ -84,10 +90,11 @@ class SrpEnergyClient(object):
         >>> username = 'your username'
         >>> password = 'your password'
         >>> client = SrpEnergyClient(accountid, username, password)
-        >>> 
+        >>>
         >>> valid = client.validate()
         >>> print(valid)
         True
+
         """
         try:
 
@@ -98,23 +105,25 @@ class SrpEnergyClient(object):
                     'https://myaccount.srpnet.com/sso/login/loginuser',
                     data={'UserName': self.username, 'Password': self.password}
                     )
-                resultString = result.content.decode("utf-8") 
-                soup = BeautifulSoup(resultString, "html.parser")
-                accountSelect = soup.find('select', attrs={'name': 'accountNumber'})
-                
+                result_string = result.content.decode("utf-8")
+                soup = BeautifulSoup(result_string, "html.parser")
+                account_select = soup.find(
+                    'select', attrs={'name': 'accountNumber'}
+                    )
+
                 accounts = []
-                for o in accountSelect.find_all('option'):
-                    if o['value'] != 'newAccount':
-                        accounts.append(o['value'])
-                
+                for option in account_select.find_all('option'):
+                    if option['value'] != 'newAccount':
+                        accounts.append(option['value'])
+
                 valid = len(accounts) > 0
 
                 return valid
 
-        except Exception:
+        except Exception:  # pylint: disable=W0703
             return False
 
-    def usage(self, startdate, enddate):
+    def usage(self, startdate, enddate):  # pylint: disable=R0914
         r"""Get the energy usage for a given date range.
 
         Parameters
@@ -153,6 +162,7 @@ class SrpEnergyClient(object):
         ('9/19/2018', '10:00 PM', '2018-09-19T22:00:00-7:00', '1.1', '0.18'),
         ('9/19/2018', '11:00 PM', '2018-09-19T23:00:00-7:00', '0.4', '0.09')
         ]
+
         """
         base_usage_url = "https://myaccount.srpnet.com/MyAccount/Usage/"
 
@@ -197,16 +207,18 @@ class SrpEnergyClient(object):
                 rows = result.content.decode('utf-8').split('\r\n')
 
                 if rows[0] == '<!DOCTYPE html>':
-                    raise TypeError(
-                            "Expected csv but received html.") 
+                    raise TypeError("Expected csv but received html.")
 
                 usage = []
                 for row in rows[1:-1]:
-                    fields = row.split(',')
-                    str_date, str_time, str_kwh, str_cost = fields[0],fields[1],fields[2],fields[3]
+                    s_date, s_time, s_kwh, s_cost, \
+                        *peak = row.split(',')  # pylint: disable=W0612
                     values = (
-                        str_date, str_time, self._get_iso_time(str_date, str_time), str_kwh,
-                        self._strip_currency(str_cost))
+                        s_date,
+                        s_time,
+                        get_iso_time(s_date, s_time),
+                        s_kwh,
+                        strip_currency(s_cost))
                     usage.append(values)
 
                 return usage
