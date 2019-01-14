@@ -25,9 +25,11 @@ GITHUB_PATH = '{}/{}'.format(
     PROJECT_GITHUB_USERNAME, PROJECT_GITHUB_REPOSITORY)
 GITHUB_URL = 'https://github.com/{}'.format(GITHUB_PATH)
 
+DEV_DOCS_URL = 'https://{}.readthedocs.io/'.format(PROJECT_GITHUB_REPOSITORY)
+
 PROJECT_URLS = {
     'Bug Reports': '{}/issues'.format(GITHUB_URL),
-    'Dev Docs': 'https://srpenergy-api-client-python.readthedocs.io/en/latest/',
+    'Dev Docs': '{}/en/latest/'.format(DEV_DOCS_URL),
 }
 
 PACKAGES = find_packages(exclude=['tests', 'tests.*'])
@@ -39,8 +41,10 @@ REQUIRES = [
 
 MIN_PY_VERSION = '3.5.3'
 
+
 def read(fname):
-    """Utility function to get README.rst into long_description.
+    """Read README.rst into long_description.
+
     ``long_description`` is what ends up on the PyPI front page.
     """
     with open(os.path.join(os.path.dirname(__file__), fname)) as f:
@@ -48,9 +52,10 @@ def read(fname):
 
     return contents
 
+
 setup(
     name=PROJECT_PACKAGE_NAME,
-    version=version,    
+    version=version,
     url=PROJECT_URL,
     project_urls=PROJECT_URLS,
     author=PROJECT_AUTHOR,
@@ -62,7 +67,7 @@ setup(
         "An unofficial Python module for interacting with Srp Energy data"),
     long_description=read('README.rst'),
     license='MIT',
-    keywords="energy API wrapper srp",    
+    keywords="energy API wrapper srp",
     package_data={
         'srpenergy': [
             'LICENSE', 'README.rst'

@@ -10,8 +10,10 @@ install:
   - python setup.py install
 
 script:
- - py.test --timeout=9 --duration=10 --cov --cov-report=html
+ - tox
+ - coverage run -m py.test test/test_client.py
+ - coverage report -m
 
 after_success: 
  - coverage report
- - coveralls
+ 

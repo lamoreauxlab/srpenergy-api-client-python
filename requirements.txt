@@ -8,5 +8,7 @@ sphinx_rtd_theme
 numpydoc
 pytest
 pytest-cov
+flake8
+pydocstyle
 
-git+https://github.com/pytest-dev/pluggy@dcde058f93a509b9c39409fca02100e43bb43485
+# git+https://github.com/pytest-dev/pluggy@dcde058f93a509b9c39409fca02100e43bb43485
