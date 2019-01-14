@@ -30,7 +30,7 @@ MOCK_USAGE_RESPONSE = MockContent(
 12:00 AM,1.2,$0.17\r\n9/19/2018,1:00 AM,2.1,$0.30\r\ntotal'
 )
 
-MOCK_TIME_OF_USE_USAGE_REPOSE = MockContent(
+MOCK_TIME_OF_USE_USAGE_RESPONSE = MockContent(
     status_code=200,
     content=b'Usage Date,Hour,kWh,Cost\r\n9/19/2018,\
 12:00 AM,1.2,$0.17,off-peak\r\n9/19/2018,1:00 AM,2.1,$0.30,off-peak\r\ntotal')
@@ -275,7 +275,7 @@ def test_time_of_use():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.return_value = MOCK_TIME_OF_USE_USAGE_REPOSE
+        session_get.return_value = MOCK_TIME_OF_USE_USAGE_RESPONSE
 
         client = SrpEnergyClient(
             TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
