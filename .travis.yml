@@ -1,18 +1,32 @@
+sudo: false
+
+
 language: python
 
-python:
-  - 3.5
-  - 3.6
+branches:
+  only:
+    - master
+
+#
+# Test test matrix is spelled out explicitly here.
+#
+# For each supported version of Python, we will test with:
+#
+#  * The current release of srpusage.
+#
+matrix:
+  include:
+    - python: 3.6
+      env: TOXENV=lint
+    - python: 3.6
+      env: TOXENV=py36
+     - python: 3.5
+      env: TOXENV=py35
+
 
 install:
   - pip install -r requirements.txt
-  - pip install tox-travis
-  - python setup.py install
 
 script:
- - tox -e py35
- - coverage run -m py.test test/test_client.py
- - coverage report -m
+  - ./.travis/run tox
 
-after_success: 
- - coverage report
