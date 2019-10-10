@@ -1,12 +1,1 @@
-requests
-bs4
-
-# Dev Requirements
-coverage
-coveralls
-sphinx_rtd_theme
-numpydoc
-pytest
-pytest-cov
-flake8
-pydocstyle
+requests>=2.22.0

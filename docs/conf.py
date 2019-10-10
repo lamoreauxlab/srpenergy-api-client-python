@@ -1,33 +1,18 @@
-# -*- coding: utf-8 -*-
-#
-# Configuration file for the Sphinx documentation builder.
-#
-# This file does only contain a selection of the most common options. For a
-# full list see the documentation:
-# http://www.sphinx-doc.org/en/master/config
-
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
 import os
 import sys
 import re
-
+import srpenergy
 
 sys.path.insert(0, os.path.abspath('..'))
 
-
 # -- Project information -----------------------------------------------------
-import srpenergy
+
 project = 'srpenergy'
 copyright = "2018, Lamoreaux Lab"
 author = "Brig Lamoreaux"
 
 # The short X.Y version
-version = '1.0'
+version = '1.2'
 # The full version, including alpha/beta/rc tags
 release = srpenergy.__version__
 version = re.sub(r'(\d+\.\d+)\.\d+(.*)', r'\1\2', srpenergy.__version__)

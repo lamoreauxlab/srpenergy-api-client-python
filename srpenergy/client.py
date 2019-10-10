@@ -5,23 +5,23 @@ This module houses the main class used to fetch energy usage.
 """
 
 import datetime
+import dateutil.parser
 import requests
-from bs4 import BeautifulSoup
 
 
-def strip_currency(val):
-    r"""Return a value without a dollary symbol $."""
-    return val.replace('$', '')
+BASE_USAGE_URL = 'https://myaccount.srpnet.com/myaccountapi/api/'
 
 
-def get_iso_time(date_part, time_part):
-    r"""Combign date and time into an iso datetime."""
-    str_date = datetime.datetime.strptime(
-        date_part, '%m/%d/%Y').strftime('%Y-%m-%d')
-    str_time = datetime.datetime.strptime(
-        time_part, '%I:%M %p').strftime('%H:%M:%S')
+def get_pretty_date(date_part):
+    r"""Return a formated date from an iso date."""
+    date = dateutil.parser.parse(date_part)
+    return date.strftime('%m/%d/%Y')
 
-    return str_date + "T" + str_time + "-7:00"
+
+def get_pretty_time(date_part):
+    r"""Return a formated time from an iso date."""
+    date = dateutil.parser.parse(date_part)
+    return date.strftime('%H:%M %p')
 
 
 class SrpEnergyClient():
@@ -40,6 +40,8 @@ class SrpEnergyClient():
 
     Methods
     -------
+    validate()
+        Validate user credentials.
     usage(startdate, enddate)
         Get the usage for a given date range.
 
@@ -100,23 +102,13 @@ class SrpEnergyClient():
 
             with requests.Session() as session:
 
-                result = session.get('https://www.srpnet.com/')
-                result = session.post(
-                    'https://myaccount.srpnet.com/sso/login/loginuser',
-                    data={'UserName': self.username, 'Password': self.password}
+                response = session.post(
+                    BASE_USAGE_URL + '/login/authorize',
+                    data={'username': self.username, 'password': self.password}
                     )
-                result_string = result.content.decode("utf-8")
-                soup = BeautifulSoup(result_string, "html.parser")
-                account_select = soup.find(
-                    'select', attrs={'name': 'accountNumber'}
-                    )
+                data = response.json()
 
-                accounts = []
-                for option in account_select.find_all('option'):
-                    if option['value'] != 'newAccount':
-                        accounts.append(option['value'])
-
-                valid = len(accounts) > 0
+                valid = data['message'] == 'Log in successful.'
 
                 return valid
 
@@ -164,8 +156,6 @@ class SrpEnergyClient():
         ]
 
         """
-        base_usage_url = "https://myaccount.srpnet.com/MyAccount/Usage/"
-
         # Validate parameters
         if not isinstance(startdate, datetime.datetime):
             raise ValueError("Parameter startdate must be datetime.")
@@ -186,39 +176,37 @@ class SrpEnergyClient():
         try:
 
             # Convert datetime to strings
-            str_startdate = startdate.strftime('%m/%d/%Y')
-            str_enddate = enddate.strftime('%m/%d/%Y')
+            str_startdate = startdate.strftime('%m-%d-%Y')
+            str_enddate = enddate.strftime('%m-%d-%Y')
 
             with requests.Session() as session:
 
-                result = session.get('https://www.srpnet.com/')
-                result = session.post(
-                    'https://myaccount.srpnet.com/sso/login/loginuser',
-                    data={'UserName': self.username, 'Password': self.password}
+                response = session.post(
+                    BASE_USAGE_URL + 'login/authorize',
+                    data={'username': self.username, 'password': self.password}
                     )
-                result = session.get(base_usage_url)
-                result = session.get(
-                    base_usage_url + '/ExportToExcel?billAccount=' +
+
+                response = session.get('login/antiforgerytoken')
+                data = response.json()
+                xsrf_token = data['xsrfToken']
+
+                response = session.get(
+                    BASE_USAGE_URL + 'usage/hourlydetail?billaccount=' +
                     self.accountid +
-                    '&viewDataType=KwhUsage&reportOption=Hourly&startDate=' +
-                    str_startdate + '&endDate=' + str_enddate +
-                    '&displayCost=false')
+                    '&beginDate=' + str_startdate + '&endDate=' + str_enddate,
+                    headerheaders={"x-xsrf-token": xsrf_token})
 
-                rows = result.content.decode('utf-8').split('\r\n')
-
-                if rows[0] == '<!DOCTYPE html>':
-                    raise TypeError("Expected csv but received html.")
+                data = response.json()
+                hourly_usage_list = data['hourlyUsageList']
 
                 usage = []
-                for row in rows[1:-1]:
-                    s_date, s_time, s_kwh, s_cost, \
-                        *peak = row.split(',')  # pylint: disable=W0612
+                for row in hourly_usage_list:
                     values = (
-                        s_date,
-                        s_time,
-                        get_iso_time(s_date, s_time),
-                        s_kwh,
-                        strip_currency(s_cost))
+                        get_pretty_date(row['date']),
+                        get_pretty_time(row['date']),
+                        row['date'],
+                        row['totalKwh'],
+                        row['totalCost'])
                     usage.append(values)
 
                 return usage
