@@ -1,31 +1,30 @@
 sudo: false
 
-
-language: python
+matrix:
+  fast_finish: true
+  include:
+    - python: "3.6"
+      env: TOXENV=lint
+    - python: "3.6"
+      env: TOXENV=pylint
+    - python: "3.6"
+      env: TOXENV=cov
+    - python: "3.6"
+      env: TOXENV=py36
+    - python: "3.5"
+      env: TOXENV=py35
+    - python: "3.7"
+      env: TOXENV=py37
+    - python: "3.7"
+      env: TOXENV=py37
+      dist: xenial
 
 branches:
   only:
     - master
 
-#
-# Test test matrix is spelled out explicitly here.
-#
-# For each supported version of Python, we will test with:
-#
-#  * The current release of srpusage.
-#
-matrix:
-  include:
-    - python: "3.6"
-      env: TOXENV=lint
-    - python: "3.6"
-      env: TOXENV=py36
-    - python: "3.5"
-      env: TOXENV=py35
-
-
-install:
-  - pip install -r requirements.txt tox
+install: pip install -U tox coveralls
+language: python
 
 script: tox
 
