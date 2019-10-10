@@ -5,7 +5,7 @@ This module houses the main class used to fetch energy usage.
 """
 
 import datetime
-import dateutil.parser
+from dateutil.parser import parse
 import requests
 
 
@@ -14,13 +14,13 @@ BASE_USAGE_URL = 'https://myaccount.srpnet.com/myaccountapi/api/'
 
 def get_pretty_date(date_part):
     r"""Return a formated date from an iso date."""
-    date = dateutil.parser.parse(date_part)
+    date = parse(date_part)
     return date.strftime('%m/%d/%Y')
 
 
 def get_pretty_time(date_part):
     r"""Return a formated time from an iso date."""
-    date = dateutil.parser.parse(date_part)
+    date = parse(date_part)
     return date.strftime('%H:%M %p')
 
 
