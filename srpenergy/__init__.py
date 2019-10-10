@@ -1,1 +1,2 @@
-__version__ = '1.0.6'
+"""Init file for Srp Energy."""
+__version__ = '1.2.0'
