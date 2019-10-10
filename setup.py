@@ -36,7 +36,7 @@ PACKAGES = find_packages(exclude=['tests', 'tests.*'])
 
 REQUIRES = [
     'requests>=1.6',
-    'beautifulsoup4>=4.5',
+    'python-dateutil>=2.8.0',
 ]
 
 MIN_PY_VERSION = '3.5.3'
