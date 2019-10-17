@@ -1,22 +1,23 @@
+"""Readthedocs Config file."""
 import os
 import sys
 import re
-import srpenergy
+# import srpenergy
 
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
 project = 'srpenergy'
-copyright = "2018, Lamoreaux Lab"
+copyright = "2019, Lamoreaux Lab"
 author = "Brig Lamoreaux"
 
 # The short X.Y version
 version = '1.2'
 # The full version, including alpha/beta/rc tags
-release = srpenergy.__version__
-version = re.sub(r'(\d+\.\d+)\.\d+(.*)', r'\1\2', srpenergy.__version__)
-version = re.sub(r'(\.dev\d+).*?$', r'\1', version)
+release = '1.2.0'
+# version = re.sub(r'(\d+\.\d+)\.\d+(.*)', r'\1\2', srpenergy.__version__)
+# version = re.sub(r'(\.dev\d+).*?$', r'\1', version)
 
 
 # -- General configuration ---------------------------------------------------
