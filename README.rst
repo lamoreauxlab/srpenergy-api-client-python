@@ -32,7 +32,8 @@ Srp provides an hourly energy usage report for their customers. The ``srpenergy`
 
 The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountapi/api/usage/hourlydetail?billaccount=<code>&beginDate=<MM-DD-YYYY>&endDate=<MM-DD-YYYY>``
 
-.. code-block:: json
+.. code-block:: JSON
+
     {   "hourlyConsumptionList": [],
         "hourlyGenerationList": [],
         "hourlyReceivedList": [],
