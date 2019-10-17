@@ -1,8 +1,6 @@
 # Dev Requirements
 coverage
 coveralls
-sphinx_rtd_theme
-numpydoc
 pylint
 pytest
 pytest-cov
