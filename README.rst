@@ -38,7 +38,6 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
         "hourlyGenerationList": [],
         "hourlyReceivedList": [],
         "hourlyUsageList":[{
-            {
                 "date": "2019-10-09T00:00:00",
                 "hour": "2019-10-09T00:00:00",
                 "onPeakKwh": 0.0,
@@ -51,8 +50,7 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
                 "shoulderCost": 0.0,
                 "superOffPeakCost": 0.0,
                 "totalCost": 0.08
-            },
-            {'...'}
+            }
         ],
         "demandList":[]
     }
