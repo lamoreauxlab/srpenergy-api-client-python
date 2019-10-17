@@ -39,7 +39,7 @@ REQUIRES = [
     'python-dateutil>=2.8.0',
 ]
 
-MIN_PY_VERSION = '3.5.3'
+MIN_PY_VERSION = '3.5'
 
 
 def read(fname):
@@ -68,6 +68,14 @@ setup(
     long_description=read('README.rst'),
     license='MIT',
     keywords="energy API wrapper srp",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3"
+    ],
     package_data={
         'srpenergy': [
             'LICENSE', 'README.rst'
