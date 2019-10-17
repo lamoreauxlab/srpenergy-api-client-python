@@ -28,24 +28,33 @@ The ``srpenergy`` module is an unofficial Python module for interacting with Srp
 - Development: https://github.com/lamoreauxlab/srpenergy-api-client-python/
 - Documentation: https://srpenergy-api-client-python.readthedocs.io/
 
-Srp provides an hourly energy usage report for their customers. The ``srpenergy`` module fetches the data found on the website.
+Srp provides an hourly energy usage report for their customers. The ``srpenergy`` module fetches the data found via the api.
 
-+-----------+----------+-----+-------+ 
-|Usage Date | Hour     | kWh | Cost  |
-+===========+==========+=====+=======+
-|9/19/2018  | 12:00 AM | 1.2 | $0.17 |
-+-----------+----------+-----+-------+
-|9/19/2018  | 1:00 AM  | 2.1 | $0.30 |
-+-----------+----------+-----+-------+
-|9/19/2018  | 2:00 AM  | 1.5 | $0.23 |
-+-----------+----------+-----+-------+
-|9/19/2018  | 3:00 AM  | 1.3 | $0.20 |
-+-----------+----------+-----+-------+
-|9/19/2018  | 4:00 AM  | 1.5 | $0.23 | 
-+-----------+----------+-----+-------+
-|9/19/2018  | 5:00 AM  | 1.5 | $0.23 |
-+-----------+----------+-----+-------+
+The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountapi/api/usage/hourlydetail?billaccount=<code>&beginDate=<MM-DD-YYYY>&endDate=<MM-DD-YYYY>``
 
+.. code-block:: json
+    {   "hourlyConsumptionList": [],
+        "hourlyGenerationList": [],
+        "hourlyReceivedList": [],
+        "hourlyUsageList":[{
+            {
+                "date": "2019-10-09T00:00:00",
+                "hour": "2019-10-09T00:00:00",
+                "onPeakKwh": 0.0,
+                "offPeakKwh": 0.0,
+                "shoulderKwh": 0.0,
+                "superOffPeakKwh": 0.0,
+                "totalKwh": 0.4,
+                "onPeakCost": 0.0,
+                "offPeakCost": 0.0,
+                "shoulderCost": 0.0,
+                "superOffPeakCost": 0.0,
+                "totalCost": 0.08
+            },
+            {'...'}
+        ],
+        "demandList":[]
+    }
 
 Installing
 ==========
