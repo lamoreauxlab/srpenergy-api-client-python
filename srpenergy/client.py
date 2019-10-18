@@ -186,7 +186,8 @@ class SrpEnergyClient():
                     data={'username': self.username, 'password': self.password}
                     )
 
-                response = session.get(BASE_USAGE_URL + 'login/antiforgerytoken')
+                response = session.get(
+                    BASE_USAGE_URL + 'login/antiforgerytoken')
                 data = response.json()
                 xsrf_token = data['xsrfToken']
 
