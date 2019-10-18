@@ -186,7 +186,7 @@ class SrpEnergyClient():
                     data={'username': self.username, 'password': self.password}
                     )
 
-                response = session.get('login/antiforgerytoken')
+                response = session.get(BASE_USAGE_URL + 'login/antiforgerytoken')
                 data = response.json()
                 xsrf_token = data['xsrfToken']
 
@@ -194,7 +194,7 @@ class SrpEnergyClient():
                     BASE_USAGE_URL + 'usage/hourlydetail?billaccount=' +
                     self.accountid +
                     '&beginDate=' + str_startdate + '&endDate=' + str_enddate,
-                    headerheaders={"x-xsrf-token": xsrf_token})
+                    headers={"x-xsrf-token": xsrf_token})
 
                 data = response.json()
                 hourly_usage_list = data['hourlyUsageList']
