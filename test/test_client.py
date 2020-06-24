@@ -1,31 +1,31 @@
 """The tests for the Srp Energy API."""
-from unittest.mock import (Mock, patch)
+from unittest.mock import Mock, patch
 from datetime import datetime, timedelta
 import pytest
 from srpenergy.client import SrpEnergyClient
 
-PATCH_GET = 'srpenergy.client.requests.Session.get'
-PATCH_POST = 'srpenergy.client.requests.Session.post'
-TEST_ACCOUNT_ID = '12345678'
-TEST_USER_NAME = 'abba'
-TEST_PASSWORD = 'dabba'
+PATCH_GET = "srpenergy.client.requests.Session.get"
+PATCH_POST = "srpenergy.client.requests.Session.post"
+TEST_ACCOUNT_ID = "12345678"
+TEST_USER_NAME = "abba"
+TEST_PASSWORD = "dabba"
 
 # MockJson = collections.namedtuple('MockContent', 'json status_code')
 # MockContent = collections.namedtuple('MockContent', 'content status_code')
 
 MOCK_LOGIN_RESPONSE = Mock()
 MOCK_LOGIN_RESPONSE.json.return_value = {
-    'message': "Log in successful.",
+    "message": "Log in successful.",
     "username": "user@example.com",
     "email": "user@example.com",
     "isIrrigator": False,
-    "redirectUrl": ""
-    }
+    "redirectUrl": "",
+}
 
 MOCK_ANTI_FORGERY_RESPONSE = {
-    'message': "Success",
-    "xsrfToken": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2|207f"
-    }
+    "message": "Success",
+    "xsrfToken": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2|207f",
+}
 
 MOCK_USAGE_RESPONSE = {
     "hourlyUsageList": (
@@ -41,7 +41,7 @@ MOCK_USAGE_RESPONSE = {
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
-            "totalCost": 0.08
+            "totalCost": 0.08,
         },
         {
             "date": "2019-10-09T01:00:00",
@@ -55,7 +55,7 @@ MOCK_USAGE_RESPONSE = {
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
-            "totalCost": 0.09
+            "totalCost": 0.09,
         },
         {
             "date": "2019-10-09T02:00:00",
@@ -69,8 +69,11 @@ MOCK_USAGE_RESPONSE = {
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
-            "totalCost": 0.08}
-    ), "demandList": ()}
+            "totalCost": 0.08,
+        },
+    ),
+    "demandList": (),
+}
 
 
 def mocked_requests_get(*args, **kwargs):
@@ -85,7 +88,7 @@ def mocked_requests_get(*args, **kwargs):
 
     """
     # pylint: disable=R0903
-    class MockResponse():
+    class MockResponse:
         """Mock Response."""
 
         def __init__(self, json_data, status_code, kwargs):
@@ -99,7 +102,7 @@ def mocked_requests_get(*args, **kwargs):
 
     if "login/antiforgerytoken" in args[0]:
         return MockResponse(MOCK_ANTI_FORGERY_RESPONSE, 200, kwargs)
-    if 'usage/hourlydetail' in args[0]:
+    if "usage/hourlydetail" in args[0]:
         return MockResponse(MOCK_USAGE_RESPONSE, 200, kwargs)
 
     return MockResponse(None, 404, kwargs)
@@ -144,37 +147,45 @@ def mocked_requests_get(*args, **kwargs):
 def test_none_accountid():
     """Test No account parameter exception."""
     with pytest.raises(TypeError):
-        SrpEnergyClient(None, 'b', 'c')
+        SrpEnergyClient(None, "b", "c")
 
 
 def test_none_username():
     """Test No username parameter exception."""
     with pytest.raises(TypeError):
-        SrpEnergyClient('a', None, 'c')
+        SrpEnergyClient("a", None, "c")
 
 
 def test_none_password():
     """Test No password parameter exception."""
     with pytest.raises(TypeError):
-        SrpEnergyClient('a', 'b', None)
+        SrpEnergyClient("a", "b", None)
 
 
 def test_blank_accountid():
     """Test blank account parameter exception."""
     with pytest.raises(ValueError):
-        SrpEnergyClient('', 'b', 'c')
+        SrpEnergyClient("", "b", "c")
 
 
 def test_blank_username():
     """Test blank username parameter exception."""
     with pytest.raises(ValueError):
-        SrpEnergyClient('a', '', 'c')
+        SrpEnergyClient("a", "", "c")
 
 
 def test_blank_password():
     """Test blank password parameter exception."""
     with pytest.raises(ValueError):
-        SrpEnergyClient('a', 'b', '')
+        SrpEnergyClient("a", "b", "")
+
+
+def test_bad_parameter_account_id_hyphens():
+    """Test accountid has hybhens in it."""
+    with pytest.raises(ValueError) as err_info:
+        SrpEnergyClient("123-456", "b", "a")
+
+    assert "Parameter account should only contain numbers." in str(err_info.value)
 
 
 def test_bad_parameter_start_date_string():
@@ -184,14 +195,12 @@ def test_bad_parameter_start_date_string():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME,
-            TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         end_date = datetime(2018, 10, 5, 12, 0, 0)
 
         with pytest.raises(ValueError):
-            client.usage('20181001', end_date)
+            client.usage("20181001", end_date)
 
 
 def test_bad_parameter_end_date_string():
@@ -201,14 +210,12 @@ def test_bad_parameter_end_date_string():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME,
-            TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime(2018, 10, 5, 12, 0, 0)
 
         with pytest.raises(ValueError):
-            client.usage(start_date, '20181001')
+            client.usage(start_date, "20181001")
 
 
 def test_bad_parameter_start_date_after_now():
@@ -218,8 +225,7 @@ def test_bad_parameter_start_date_after_now():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime.now() + timedelta(days=10)
         end_date = datetime.now() + timedelta(days=15)
@@ -235,8 +241,7 @@ def test_bad_parameter_start_date_after_end_date():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime(2018, 10, 6, 12, 0, 0)
         end_date = datetime(2018, 10, 5, 12, 0, 0)
@@ -252,8 +257,7 @@ def test_get_usage():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime(2018, 10, 1, 6, 0, 0)
         end_date = datetime(2018, 10, 5, 12, 0, 0)
@@ -270,8 +274,7 @@ def test_single_day_usage_kw():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime(2018, 9, 19, 0, 0, 0)
         end_date = datetime(2018, 9, 19, 23, 0, 0)
@@ -293,8 +296,7 @@ def test_latest_day_usage_kw():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         start_date = datetime(2018, 9, 19, 0, 0, 0)
         end_date = datetime(2018, 9, 19, 23, 0, 0)
@@ -316,8 +318,7 @@ def test_validate_user():
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = mocked_requests_get
 
-        client = SrpEnergyClient(
-            TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         is_valid = client.validate()
 

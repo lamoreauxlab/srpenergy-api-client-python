@@ -7,24 +7,25 @@ This module houses the main class used to fetch energy usage.
 import datetime
 from dateutil.parser import parse
 import requests
+import re
 
 
-BASE_USAGE_URL = 'https://myaccount.srpnet.com/myaccountapi/api/'
+BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
 
 def get_pretty_date(date_part):
     r"""Return a formated date from an iso date."""
     date = parse(date_part)
-    return date.strftime('%m/%d/%Y')
+    return date.strftime("%m/%d/%Y")
 
 
 def get_pretty_time(date_part):
     r"""Return a formated time from an iso date."""
     date = parse(date_part)
-    return date.strftime('%H:%M %p')
+    return date.strftime("%H:%M %p")
 
 
-class SrpEnergyClient():
+class SrpEnergyClient:
     r"""SrpEnergyClient(accountid, username, password).
 
     Client used to fetch srp energy usage.
@@ -60,16 +61,16 @@ class SrpEnergyClient():
             raise TypeError("Parameter password can not be none.")
 
         if not accountid:
-            raise ValueError(
-                "Parameter accountid must have length greater than 0.")
+            raise ValueError("Parameter accountid must have length greater than 0.")
 
         if not username:
-            raise ValueError(
-                "Parameter username must have length greater than 0.")
+            raise ValueError("Parameter username must have length greater than 0.")
 
         if not password:
-            raise ValueError(
-                "Parameter password must have length greater than 0.")
+            raise ValueError("Parameter password must have length greater than 0.")
+
+        if not re.match(r"^\d{9}$", accountid):
+            raise ValueError("Parameter account should only contain numbers.")
 
         self.accountid = accountid
         self.username = username
@@ -103,12 +104,12 @@ class SrpEnergyClient():
             with requests.Session() as session:
 
                 response = session.post(
-                    BASE_USAGE_URL + '/login/authorize',
-                    data={'username': self.username, 'password': self.password}
-                    )
+                    BASE_USAGE_URL + "/login/authorize",
+                    data={"username": self.username, "password": self.password},
+                )
                 data = response.json()
 
-                valid = data['message'] == 'Log in successful.'
+                valid = data["message"] == "Log in successful."
 
                 return valid
 
@@ -165,49 +166,52 @@ class SrpEnergyClient():
 
         # Validate date ranges
         if startdate > enddate:
-            raise ValueError(
-                "Parameter startdate can not be greater than enddate.")
+            raise ValueError("Parameter startdate can not be greater than enddate.")
 
         # Validate date ranges
         if startdate > datetime.datetime.now():
-            raise ValueError(
-                "Parameter startdate can not be greater than now.")
+            raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
 
             # Convert datetime to strings
-            str_startdate = startdate.strftime('%m-%d-%Y')
-            str_enddate = enddate.strftime('%m-%d-%Y')
+            str_startdate = startdate.strftime("%m-%d-%Y")
+            str_enddate = enddate.strftime("%m-%d-%Y")
 
             with requests.Session() as session:
 
                 response = session.post(
-                    BASE_USAGE_URL + 'login/authorize',
-                    data={'username': self.username, 'password': self.password}
-                    )
+                    BASE_USAGE_URL + "login/authorize",
+                    data={"username": self.username, "password": self.password},
+                )
+
+                response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
+                data = response.json()
+                xsrf_token = data["xsrfToken"]
 
                 response = session.get(
-                    BASE_USAGE_URL + 'login/antiforgerytoken')
-                data = response.json()
-                xsrf_token = data['xsrfToken']
+                    BASE_USAGE_URL
+                    + "usage/hourlydetail?billaccount="
+                    + self.accountid
+                    + "&beginDate="
+                    + str_startdate
+                    + "&endDate="
+                    + str_enddate,
+                    headers={"x-xsrf-token": xsrf_token},
+                )
 
-                response = session.get(
-                    BASE_USAGE_URL + 'usage/hourlydetail?billaccount=' +
-                    self.accountid +
-                    '&beginDate=' + str_startdate + '&endDate=' + str_enddate,
-                    headers={"x-xsrf-token": xsrf_token})
-
                 data = response.json()
-                hourly_usage_list = data['hourlyUsageList']
+                hourly_usage_list = data["hourlyUsageList"]
 
                 usage = []
                 for row in hourly_usage_list:
                     values = (
-                        get_pretty_date(row['date']),
-                        get_pretty_time(row['date']),
-                        row['date'],
-                        row['totalKwh'],
-                        row['totalCost'])
+                        get_pretty_date(row["date"]),
+                        get_pretty_time(row["date"]),
+                        row["date"],
+                        row["totalKwh"],
+                        row["totalCost"],
+                    )
                     usage.append(values)
 
                 return usage
