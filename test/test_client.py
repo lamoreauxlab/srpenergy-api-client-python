@@ -6,7 +6,7 @@ from srpenergy.client import SrpEnergyClient
 
 PATCH_GET = "srpenergy.client.requests.Session.get"
 PATCH_POST = "srpenergy.client.requests.Session.post"
-TEST_ACCOUNT_ID = "12345678"
+TEST_ACCOUNT_ID = "123456789"
 TEST_USER_NAME = "abba"
 TEST_PASSWORD = "dabba"
 
@@ -153,13 +153,13 @@ def test_none_accountid():
 def test_none_username():
     """Test No username parameter exception."""
     with pytest.raises(TypeError):
-        SrpEnergyClient("a", None, "c")
+        SrpEnergyClient(TEST_ACCOUNT_ID, None, "c")
 
 
 def test_none_password():
     """Test No password parameter exception."""
     with pytest.raises(TypeError):
-        SrpEnergyClient("a", "b", None)
+        SrpEnergyClient(TEST_ACCOUNT_ID, "b", None)
 
 
 def test_blank_accountid():
@@ -171,13 +171,13 @@ def test_blank_accountid():
 def test_blank_username():
     """Test blank username parameter exception."""
     with pytest.raises(ValueError):
-        SrpEnergyClient("a", "", "c")
+        SrpEnergyClient(TEST_ACCOUNT_ID, "", "c")
 
 
 def test_blank_password():
     """Test blank password parameter exception."""
     with pytest.raises(ValueError):
-        SrpEnergyClient("a", "b", "")
+        SrpEnergyClient(TEST_ACCOUNT_ID, "b", "")
 
 
 def test_bad_parameter_account_id_hyphens():
