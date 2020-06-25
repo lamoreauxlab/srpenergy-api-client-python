@@ -156,12 +156,12 @@ Running ``tox`` will invoke the full test suite. To be able to run the specific 
 
     pip3 install -r requirements_test.txt
 
-Now that you have all test dependencies installed, you can run tests on individual files:
+Now that you have all test dependencies installed, you can run tests on the project:
 
 .. code-block:: bash
 
-    flake8 srpenergy/client.py test/test_client.py
-    pylint srpenergy/client.py test/test_client.py
-    pydocstyle srpenergy test/test_client.py
+    flake8 srpenergy test
+    pylint srpenergy test
+    pydocstyle srpenergy test
     python -m pytest test/test_client.py
 
