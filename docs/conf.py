@@ -1,7 +1,8 @@
 """Readthedocs Config file."""
 import os
-import sys
 import re
+import sys
+
 # import srpenergy
 
 sys.path.insert(0, os.path.abspath('..'))

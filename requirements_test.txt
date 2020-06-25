@@ -1,8 +1,10 @@
 # Dev Requirements
 coverage
 coveralls
+flake8
+flake8-docstrings
+isort
+pydocstyle
 pylint
 pytest
 pytest-cov
-flake8
-pydocstyle

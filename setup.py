@@ -3,8 +3,10 @@
 import os
 import sys
 from datetime import datetime as dt
+
+from setuptools import find_packages, setup
+
 from srpenergy import __version__ as version
-from setuptools import setup, find_packages
 
 if sys.argv[-1] == 'publish':
     os.system("python setup.py sdist upload")
