@@ -1,7 +1,9 @@
 """The tests for the Srp Energy API."""
-from unittest.mock import Mock, patch
 from datetime import datetime, timedelta
+from unittest.mock import Mock, patch
+
 import pytest
+
 from srpenergy.client import SrpEnergyClient
 
 PATCH_GET = "srpenergy.client.requests.Session.get"
