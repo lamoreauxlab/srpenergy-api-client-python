@@ -55,6 +55,10 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
         "demandList":[]
     }
 
+.. note:: Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_ 
+
+
+
 Installing
 ==========
 
@@ -160,8 +164,11 @@ Now that you have all test dependencies installed, you can run tests on the proj
 
 .. code-block:: bash
 
+    isort -rc .
+    black srpenergy test
     flake8 srpenergy test
     pylint srpenergy test
     pydocstyle srpenergy test
     python -m pytest test/test_client.py
+    python -m pytest --cov-report term-missing --cov=srpenergy
 
