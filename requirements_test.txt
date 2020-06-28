@@ -6,5 +6,6 @@ flake8-docstrings
 isort
 pydocstyle
 pylint
+pylint_strict_informational
 pytest
 pytest-cov

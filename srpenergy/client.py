@@ -4,8 +4,8 @@ This module houses the main class used to fetch energy usage.
 
 """
 
-import datetime
 import re
+from datetime import datetime, timedelta
 
 import requests
 from dateutil.parser import parse
@@ -23,6 +23,90 @@ def get_pretty_time(date_part):
     r"""Return a formated time from an iso date."""
     date = parse(date_part)
     return date.strftime("%H:%M %p")
+
+
+def get_rate(str_usage_time):
+    r"""Return the time of use pricing for the given time.
+
+    From the SRP website
+    peak times:
+    Winter      Nov-Apr (5am-9am, 5pm-9pm) 9.51 peak, 6.91 offpeak
+    Summer      May-Oct (2pm-8pm) 20.94 peak, 7.27 offpeak
+    Summer Peak Jul,Aug (2pm-8pm) 24.09, 7.3
+
+    Higher on-peak prices are in effect Monday through Friday
+    only during the hours shown.
+    Lower off-peak prices are in effect all other weekday hours,
+    weekends and six observed holidays:
+    New Year's Day, Memorial Day, Independence Day,
+    Labor Day, Thanksgiving Day and Christmas Day.
+
+    see https://srpnet.com/prices/pdfx/April2015/E-26.pdf
+    """
+    # Validate parameters
+    if str_usage_time is None:
+        raise TypeError("Parameter str_usage_time can not be none.")
+
+    try:
+        usage_time = parse(str_usage_time)
+    except ValueError:
+        raise ValueError("Parameter str_usage_time should be parsed as a datetime.")
+
+    summer_start_date = datetime(usage_time.year, 5, 1, 0, 0, 0)
+    summer_end_date = datetime(usage_time.year, 11, 1, 0, 0, 0) - timedelta(seconds=1)
+
+    peak_summer_start_date = datetime(usage_time.year, 7, 1, 0, 0, 0)
+    peak_summer_end_date = datetime(usage_time.year, 9, 1, 0, 0, 0) - timedelta(
+        seconds=1
+    )
+
+    week_day_idx = usage_time.weekday()
+
+    # Holidays (New Years, Independence, Memorial, Labor, Thanks, Christmas)
+    is_holiday = usage_time.month == 1 and usage_time.day == 1
+    is_holiday = is_holiday or (usage_time.day == 4 and usage_time.month == 7)
+    is_holiday = is_holiday or (
+        usage_time.month == 5 and (week_day_idx == 0 and (31 - usage_time.day) < 7)
+    )
+    is_holiday = is_holiday or (
+        usage_time.month == 9 and (week_day_idx == 0 and (usage_time.day <= 7))
+    )
+    is_holiday = is_holiday or (usage_time.month == 11 and week_day_idx == 3)
+    is_holiday = is_holiday or (usage_time.month == 12 and usage_time.day == 24)
+
+    is_weekend = week_day_idx > 4
+
+    if peak_summer_start_date <= usage_time <= peak_summer_end_date:
+        # Check if is Peak Summer
+
+        is_peak = 14 <= usage_time.hour < 20
+        peak_rate = 0.2409
+        non_peak_rate = 0.073
+
+    elif summer_start_date <= usage_time <= summer_end_date:
+        # Check if regualr Summer
+
+        # Is peak time
+        is_peak = 14 <= usage_time.hour < 20
+        peak_rate = 0.2094
+        non_peak_rate = 0.0727
+
+    else:
+        # Must be winter
+
+        # Check if in Peak hours
+        is_peak = 5 <= usage_time.hour < 9 or 17 <= usage_time.hour < 21
+
+        peak_rate = 0.0951
+        non_peak_rate = 0.0691
+
+    is_peak = is_peak and not is_holiday and not is_weekend
+    if is_peak:
+        rate = peak_rate
+    else:
+        rate = non_peak_rate
+
+    return rate, is_peak
 
 
 class SrpEnergyClient:
@@ -158,10 +242,10 @@ class SrpEnergyClient:
 
         """
         # Validate parameters
-        if not isinstance(startdate, datetime.datetime):
+        if not isinstance(startdate, datetime):
             raise ValueError("Parameter startdate must be datetime.")
 
-        if not isinstance(enddate, datetime.datetime):
+        if not isinstance(enddate, datetime):
             raise ValueError("Parameter enddate must be datetime.")
 
         # Validate date ranges
@@ -169,7 +253,7 @@ class SrpEnergyClient:
             raise ValueError("Parameter startdate can not be greater than enddate.")
 
         # Validate date ranges
-        if startdate > datetime.datetime.now():
+        if startdate > datetime.now():
             raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
@@ -205,12 +289,28 @@ class SrpEnergyClient:
 
                 usage = []
                 for row in hourly_usage_list:
+
+                    total_kwh = row["totalKwh"]
+                    total_cost = row["totalCost"]
+
+                    # Check if on Time of Use Plan
+                    if row["totalKwh"] == 0.0:
+
+                        rate, is_peak = get_rate(row["date"])
+
+                        if is_peak:
+                            total_kwh = row["onPeakKwh"]
+                        else:
+                            total_kwh = row["offPeakKwh"]
+
+                        total_cost = total_kwh * rate
+
                     values = (
                         get_pretty_date(row["date"]),
                         get_pretty_time(row["date"]),
                         row["date"],
-                        row["totalKwh"],
-                        row["totalCost"],
+                        total_kwh,
+                        round(total_cost, 2),
                     )
                     usage.append(values)
 

@@ -1,34 +1,29 @@
 """The tests for the Srp Energy API."""
 from datetime import datetime, timedelta
+from test.common import MOCK_LOGIN_RESPONSE  # pylint: disable=R0801
+from test.common import (
+    PATCH_GET,
+    PATCH_POST,
+    TEST_PASSWORD,
+    TEST_USER_NAME,
+    get_mock_requests,
+)
 from unittest.mock import Mock, patch
 
 import pytest
 
 from srpenergy.client import SrpEnergyClient
 
-PATCH_GET = "srpenergy.client.requests.Session.get"
-PATCH_POST = "srpenergy.client.requests.Session.post"
 TEST_ACCOUNT_ID = "123456789"
-TEST_USER_NAME = "abba"
-TEST_PASSWORD = "dabba"
-
-# MockJson = collections.namedtuple('MockContent', 'json status_code')
-# MockContent = collections.namedtuple('MockContent', 'content status_code')
-
-MOCK_LOGIN_RESPONSE = Mock()
-MOCK_LOGIN_RESPONSE.json.return_value = {
-    "message": "Log in successful.",
-    "username": "user@example.com",
-    "email": "user@example.com",
-    "isIrrigator": False,
-    "redirectUrl": "",
+TEST_BAD_ACCOUNT_ID = "888999000"
+MOCK_BAD_LOGIN_RESPONSE = Mock()
+MOCK_BAD_LOGIN_RESPONSE.json.return_value = {
+    "unpredected": "reponse",
 }
 
-MOCK_ANTI_FORGERY_RESPONSE = {
-    "message": "Success",
-    "xsrfToken": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2|207f",
+MOCK_BAD_USAGE_RESPONSE = {
+    "unpredected": "reponse",
 }
-
 MOCK_USAGE_RESPONSE = {
     "hourlyUsageList": (
         {
@@ -77,73 +72,10 @@ MOCK_USAGE_RESPONSE = {
     "demandList": (),
 }
 
-
-def mocked_requests_get(*args, **kwargs):
-    r"""Get the energy usage for a given date range.
-
-    Parameters
-    ----------
-    *args : tuple
-        arguments passed in.
-    **kwargs : tuple
-        additional args.
-
-    """
-    # pylint: disable=R0903
-    class MockResponse:
-        """Mock Response."""
-
-        def __init__(self, json_data, status_code, kwargs):
-            self.json_data = json_data
-            self.status_code = status_code
-            self.kwargs = kwargs
-
-        def json(self):
-            """Return mock json."""
-            return self.json_data
-
-    if "login/antiforgerytoken" in args[0]:
-        return MockResponse(MOCK_ANTI_FORGERY_RESPONSE, 200, kwargs)
-    if "usage/hourlydetail" in args[0]:
-        return MockResponse(MOCK_USAGE_RESPONSE, 200, kwargs)
-
-    return MockResponse(None, 404, kwargs)
-
-
-# class MockLoginResponse:
-#     """Represents a Mock Login Response for testing."""
-
-#     def __init__(self, status_code):
-#         """Define content for Mock Login."""
-#         self.status_code = status_code
-#         self.content = b'<!DOCTYPE html>\
-#         <html lang="en"><head><title>Sample</title></head>\
-#         <body><select name="accountNumber" id="AccountSelection">\
-#         <optgroup id="ElectricAccountSelect" label="My power accounts">\
-#         <option value="12345678" selected=&quot;selected&quot;>\
-#         123-456-789</option>\
-#         </optgroup><option value="newAccount">Add new account</option>\
-#         </select></body></html>'
-
-
-# class MockUsageResponse:
-#     """Represents a Mock Usage Response for testing."""
-
-#     def __init__(self, status_code):
-#         """Define content for Mock Usage."""
-#         self.status_code = status_code
-#         self.content = b'Usage Date,Hour,kWh,Cost\r\n9/19/2018,\
-# 12:00 AM,1.2,$0.17\r\n9/19/2018,1:00 AM,2.1,$0.30\r\ntotal'
-
-
-# class MockTimeOfUseUsageResponse:
-#     """Represents a Mock Usage Response for testing."""
-
-#     def __init__(self, status_code):
-#         """Define content for Mock Usage."""
-#         self.status_code = status_code
-#         self.content = b'Usage Date,Hour,kWh,Cost\r\n9/19/2018,\
-# 12:00 AM,1.2,$0.17,off-peak\r\n9/19/2018,1:00 AM,2.1,$0.30,off-peak\r\ntotal'
+ROUTES = [
+    (TEST_BAD_ACCOUNT_ID, MOCK_BAD_USAGE_RESPONSE),
+    ("usage/hourlydetail", MOCK_USAGE_RESPONSE),
+]
 
 
 def test_none_accountid():
@@ -195,7 +127,7 @@ def test_bad_parameter_start_date_string():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -210,7 +142,7 @@ def test_bad_parameter_end_date_string():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -225,7 +157,7 @@ def test_bad_parameter_start_date_after_now():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -241,7 +173,7 @@ def test_bad_parameter_start_date_after_end_date():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -257,7 +189,7 @@ def test_get_usage():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -274,7 +206,7 @@ def test_single_day_usage_kw():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -296,7 +228,7 @@ def test_latest_day_usage_kw():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -318,10 +250,40 @@ def test_validate_user():
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
 
         session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = mocked_requests_get
+        session_get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
         is_valid = client.validate()
 
         assert is_valid
+
+
+def test_error_validate_user():
+    """Test error Validation of user."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+
+        session_post.return_value = MOCK_BAD_LOGIN_RESPONSE
+        session_get.side_effect = get_mock_requests(ROUTES)
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        is_valid = client.validate()
+
+        assert is_valid is False
+
+
+def test_error_usage_payload():
+    """Test error with invalid usage payload."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+
+        session_post.return_value = MOCK_LOGIN_RESPONSE
+        session_get.side_effect = get_mock_requests(ROUTES)
+
+        client = SrpEnergyClient(TEST_BAD_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        start_date = datetime(2018, 9, 19, 0, 0, 0)
+        end_date = datetime(2018, 9, 19, 23, 0, 0)
+
+        with pytest.raises(Exception):
+            client.usage(start_date, end_date)
