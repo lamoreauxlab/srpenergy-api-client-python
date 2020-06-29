@@ -169,6 +169,6 @@ Now that you have all test dependencies installed, you can run tests on the proj
     flake8 srpenergy test
     pylint srpenergy test
     pydocstyle srpenergy test
-    python -m pytest test/test_client.py
+    python -m pytest test
     python -m pytest --cov-report term-missing --cov=srpenergy
 

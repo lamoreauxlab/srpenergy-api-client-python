@@ -324,7 +324,7 @@ def test_time_of_use_summer_off_peak_usage():
         start_date = datetime(2020, 6, 24, 0, 0, 0)
         end_date = datetime(2020, 6, 24, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
@@ -346,7 +346,7 @@ def test_time_of_use_summer_on_peak_usage():
         start_date = datetime(2020, 6, 25, 0, 0, 0)
         end_date = datetime(2020, 6, 25, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
@@ -368,7 +368,7 @@ def test_time_of_use_peak_summer_off_peak_usage():
         start_date = datetime(2019, 7, 24, 0, 0, 0)
         end_date = datetime(2019, 7, 24, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
@@ -390,7 +390,7 @@ def test_time_of_use_peak_summer_on_peak_usage():
         start_date = datetime(2019, 7, 23, 0, 0, 0)
         end_date = datetime(2019, 7, 23, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
@@ -412,7 +412,7 @@ def test_time_of_use_winter_off_peak_usage():
         start_date = datetime(2019, 12, 20, 0, 0, 0)
         end_date = datetime(2019, 12, 20, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
@@ -434,7 +434,7 @@ def test_time_of_use_winter_on_peak_usage():
         start_date = datetime(2019, 12, 19, 0, 0, 0)
         end_date = datetime(2019, 12, 19, 23, 0, 0)
 
-        usage = client.usage(start_date, end_date)
+        usage = client.usage(start_date, end_date, True)
 
         assert len(usage) == 3
 
