@@ -200,7 +200,7 @@ class SrpEnergyClient:
         except Exception:  # pylint: disable=W0703
             return False
 
-    def usage(self, startdate, enddate):  # pylint: disable=R0914
+    def usage(self, startdate, enddate, is_tou=False):  # pylint: disable=R0914
         r"""Get the energy usage for a given date range.
 
         Parameters
@@ -294,7 +294,7 @@ class SrpEnergyClient:
                     total_cost = row["totalCost"]
 
                     # Check if on Time of Use Plan
-                    if row["totalKwh"] == 0.0:
+                    if is_tou:
 
                         rate, is_peak = get_rate(row["date"])
 
