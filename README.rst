@@ -88,6 +88,24 @@ Use
     
     date, hour, isodate, kwh, cost = usage[0]
 
+For Time of use plans pass in the argument `is_tou`
+
+.. code-block:: python
+
+    from datetime import datetime, timedelta
+    from srpenergy.client import SrpEnergyClient
+
+    accountid = 'your account id'
+    username = 'your username'
+    password = 'your password'
+    end_date = datetime.now()
+    start_date = datetime.now() - timedelta(days=2)
+
+    client = SrpEnergyClient(accountid, username, password)
+    usage = client.usage(start_date, end_date, True)
+    
+    date, hour, isodate, kwh, cost = usage[0]
+
 
 Development 
 ===========
