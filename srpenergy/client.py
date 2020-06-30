@@ -209,6 +209,8 @@ class SrpEnergyClient:
             the start date
         enddate : datetime
             the end date
+        is_tou : bool
+            indicate if usage is a time of use plan
 
         Returns
         -------
