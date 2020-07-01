@@ -229,10 +229,10 @@ class SrpEnergyClient:
         Get the hourly usage for a given day.
 
         >>> from srpenergy.client import SrpEnergyClient
-        >>> TEST_ACCOUNT_ID = "<accountid>"
-        >>> TEST_USER_NAME = "<user_name>"
-        >>> TEST_PASSWORD = "<password>"
-        >>> client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+        >>> accountid = 'your account id'
+        >>> username = 'your username'
+        >>> password = 'your password'
+        >>> client = SrpEnergyClient(accountid, username, password)
         >>> start_date = datetime(2018, 9, 19, 0, 0, 0)
         >>> end_date = datetime(2018, 9, 19, 23, 0, 0)
         >>> usage = client.usage(start_date, end_date)
