@@ -1,47 +1,43 @@
 #!/usr/bin/env python3
 """Srp Energy setup script."""
+from datetime import datetime as dt
 import os
 import sys
-from datetime import datetime as dt
 
 from setuptools import find_packages, setup
 
 from srpenergy import __version__ as version
 
-if sys.argv[-1] == 'publish':
+if sys.argv[-1] == "publish":
     os.system("python setup.py sdist upload")
     sys.exit()
 
-PROJECT_NAME = 'Srp Energy'
-PROJECT_PACKAGE_NAME = 'srpenergy'
-PROJECT_LICENSE = 'MIT'
-PROJECT_AUTHOR = 'Lamoreaux Lab'
-PROJECT_COPYRIGHT = ' 2018-{}, {}'.format(dt.now().year, PROJECT_AUTHOR)
-PROJECT_URL = 'https://github.com/lamoreauxlab/srpenergy-api-client-python'
-PROJECT_EMAIL = 'bklamoreaux@gmail.com'
+PROJECT_NAME = "Srp Energy"
+PROJECT_PACKAGE_NAME = "srpenergy"
+PROJECT_LICENSE = "MIT"
+PROJECT_AUTHOR = "Lamoreaux Lab"
+PROJECT_COPYRIGHT = " 2018-{}, {}".format(dt.now().year, PROJECT_AUTHOR)
+PROJECT_URL = "https://github.com/lamoreauxlab/srpenergy-api-client-python"
+PROJECT_EMAIL = "bklamoreaux@gmail.com"
 
-PROJECT_GITHUB_USERNAME = 'lamoreauxlab'
-PROJECT_GITHUB_REPOSITORY = 'srpenergy-api-client-python'
+PROJECT_GITHUB_USERNAME = "lamoreauxlab"
+PROJECT_GITHUB_REPOSITORY = "srpenergy-api-client-python"
 
-GITHUB_PATH = '{}/{}'.format(
-    PROJECT_GITHUB_USERNAME, PROJECT_GITHUB_REPOSITORY)
-GITHUB_URL = 'https://github.com/{}'.format(GITHUB_PATH)
+GITHUB_PATH = "{}/{}".format(PROJECT_GITHUB_USERNAME, PROJECT_GITHUB_REPOSITORY)
+GITHUB_URL = "https://github.com/{}".format(GITHUB_PATH)
 
-DEV_DOCS_URL = 'https://{}.readthedocs.io/'.format(PROJECT_GITHUB_REPOSITORY)
+DEV_DOCS_URL = "https://{}.readthedocs.io/".format(PROJECT_GITHUB_REPOSITORY)
 
 PROJECT_URLS = {
-    'Bug Reports': '{}/issues'.format(GITHUB_URL),
-    'Dev Docs': '{}/en/latest/'.format(DEV_DOCS_URL),
+    "Bug Reports": "{}/issues".format(GITHUB_URL),
+    "Dev Docs": "{}/en/latest/".format(DEV_DOCS_URL),
 }
 
-PACKAGES = find_packages(exclude=['tests', 'tests.*'])
+PACKAGES = find_packages(exclude=["tests", "tests.*"])
 
-REQUIRES = [
-    'requests>=1.6',
-    'python-dateutil>=2.8.0',
-]
+REQUIRES = ["requests>=2.22.0", "python-dateutil>=2.8.0"]
 
-MIN_PY_VERSION = '3.5'
+MIN_PY_VERSION = "3.5"
 
 
 def read(fname):
@@ -49,8 +45,8 @@ def read(fname):
 
     ``long_description`` is what ends up on the PyPI front page.
     """
-    with open(os.path.join(os.path.dirname(__file__), fname)) as f:
-        contents = f.read()
+    with open(os.path.join(os.path.dirname(__file__), fname)) as readme_file:
+        contents = readme_file.read()
 
     return contents
 
@@ -64,26 +60,20 @@ setup(
     author_email=PROJECT_EMAIL,
     packages=PACKAGES,
     install_requires=REQUIRES,
-    python_requires='>={}'.format(MIN_PY_VERSION),
-    description=(
-        "An unofficial Python module for interacting with Srp Energy data"),
-    long_description=read('README.rst'),
-    license='MIT',
+    python_requires=f">={MIN_PY_VERSION}",
+    description=("An unofficial Python module for interacting with Srp Energy data"),
+    long_description=read("README.rst"),
+    license="MIT",
     keywords="energy API wrapper srp",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers"        
+        "Intended Audience :: Developers",
     ],
-    package_data={
-        'srpenergy': [
-            'LICENSE', 'README.rst'
-        ]
-    },
+    package_data={"srpenergy": ["LICENSE", "README.rst"]},
 )

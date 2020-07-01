@@ -55,7 +55,7 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
         "demandList":[]
     }
 
-.. note:: Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_ 
+.. note:: Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
 
 
 
@@ -85,7 +85,7 @@ Use
 
     client = SrpEnergyClient(accountid, username, password)
     usage = client.usage(start_date, end_date)
-    
+
     date, hour, isodate, kwh, cost = usage[0]
 
 For Time of use plans pass in the argument `is_tou`
@@ -103,11 +103,11 @@ For Time of use plans pass in the argument `is_tou`
 
     client = SrpEnergyClient(accountid, username, password)
     usage = client.usage(start_date, end_date, True)
-    
+
     date, hour, isodate, kwh, cost = usage[0]
 
 
-Development 
+Development
 ===========
 
 
@@ -134,7 +134,7 @@ Instead of order the imports manually, use `isort <https://github.com/timothycro
 .. code-block:: bash
 
     pip3 install isort
-    isort -rc .  
+    isort -rc .
 
 
 Use new style string formatting
@@ -183,10 +183,13 @@ Now that you have all test dependencies installed, you can run tests on the proj
 .. code-block:: bash
 
     isort -rc .
-    black srpenergy test
-    flake8 srpenergy test
-    pylint srpenergy test
-    pydocstyle srpenergy test
-    python -m pytest test
+    codespell  --skip="./.*,*.csv,*.json,*.pyc,./docs/_build/*,./htmlcov/*"
+    black setup.py srpenergy tests
+    flake8 setup.py srpenergy tests
+    pylint setup.py srpenergy tests
+    pydocstyle setup.py srpenergy tests
+    python -m pytest tests
     python -m pytest --cov-report term-missing --cov=srpenergy
 
+Package and Deploy
+------------------

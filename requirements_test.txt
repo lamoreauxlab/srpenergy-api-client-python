@@ -1,12 +1,14 @@
 # Dev Requirements
-codecov
-coverage
-coveralls
-flake8
-flake8-docstrings
-isort
-pydocstyle
-pylint
-pylint_strict_informational
-pytest
-pytest-cov
+
+codecov==2.1.0
+coverage==4.5.4
+coveralls==1.8.2
+flake8==3.7.8
+flake8-docstrings==1.5.0
+isort==4.3.21
+pre-commit==2.5.1
+pydocstyle==4.0.1
+pylint==2.4.2
+pylint-strict-informational==0.1
+pytest==5.2.1
+pytest-cov==2.8.1
