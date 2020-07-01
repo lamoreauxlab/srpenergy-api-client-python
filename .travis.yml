@@ -2,6 +2,8 @@ language: python
 os: linux
 dist: xenial
 
+install: pip install -U tox coveralls codecov
+
 stages:
   - test
   - name: deploy
