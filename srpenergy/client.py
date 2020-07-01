@@ -4,23 +4,23 @@ This module houses the main class used to fetch energy usage.
 
 """
 
-import re
 from datetime import datetime, timedelta
+import re
 
-import requests
 from dateutil.parser import parse
+import requests
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
 
 def get_pretty_date(date_part):
-    r"""Return a formated date from an iso date."""
+    r"""Return a formatted date from an iso date."""
     date = parse(date_part)
     return date.strftime("%m/%d/%Y")
 
 
 def get_pretty_time(date_part):
-    r"""Return a formated time from an iso date."""
+    r"""Return a formatted time from an iso date."""
     date = parse(date_part)
     return date.strftime("%H:%M %p")
 
@@ -84,7 +84,7 @@ def get_rate(str_usage_time):
         non_peak_rate = 0.073
 
     elif summer_start_date <= usage_time <= summer_end_date:
-        # Check if regualr Summer
+        # Check if regular Summer
 
         # Is peak time
         is_peak = 14 <= usage_time.hour < 20
@@ -228,6 +228,11 @@ class SrpEnergyClient:
         --------
         Get the hourly usage for a given day.
 
+        >>> from srpenergy.client import SrpEnergyClient
+        >>> TEST_ACCOUNT_ID = "<accountid>"
+        >>> TEST_USER_NAME = "<user_name>"
+        >>> TEST_PASSWORD = "<password>"
+        >>> client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
         >>> start_date = datetime(2018, 9, 19, 0, 0, 0)
         >>> end_date = datetime(2018, 9, 19, 23, 0, 0)
         >>> usage = client.usage(start_date, end_date)

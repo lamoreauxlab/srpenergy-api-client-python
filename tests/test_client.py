@@ -1,28 +1,29 @@
 """The tests for the Srp Energy API."""
 from datetime import datetime, timedelta
-from test.common import MOCK_LOGIN_RESPONSE  # pylint: disable=R0801
-from test.common import (
-    PATCH_GET,
-    PATCH_POST,
-    TEST_PASSWORD,
-    TEST_USER_NAME,
-    get_mock_requests,
-)
 from unittest.mock import Mock, patch
 
 import pytest
 
 from srpenergy.client import SrpEnergyClient
 
+from tests.common import (
+    PATCH_GET,
+    PATCH_POST,
+    TEST_PASSWORD,
+    TEST_USER_NAME,
+    get_mock_requests,
+)
+from tests.common import MOCK_LOGIN_RESPONSE  # pylint: disable=R0801
+
 TEST_ACCOUNT_ID = "123456789"
 TEST_BAD_ACCOUNT_ID = "888999000"
 MOCK_BAD_LOGIN_RESPONSE = Mock()
 MOCK_BAD_LOGIN_RESPONSE.json.return_value = {
-    "unpredected": "reponse",
+    "unpredected": "response",
 }
 
 MOCK_BAD_USAGE_RESPONSE = {
-    "unpredected": "reponse",
+    "unpredected": "response",
 }
 MOCK_USAGE_RESPONSE = {
     "hourlyUsageList": (

@@ -27,7 +27,7 @@ class MockResponse:
     """Mock Response."""
 
     def __init__(self, json_data, status_code, kwargs):
-        """Create Mock Repsonse."""
+        """Create Mock Response."""
         self.json_data = json_data
         self.status_code = status_code
         self.kwargs = kwargs
