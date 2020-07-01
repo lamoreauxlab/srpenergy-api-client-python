@@ -35,7 +35,7 @@ PACKAGES = find_packages(exclude=["tests", "tests.*"])
 
 REQUIRES = ["requests>=2.22.0", "python-dateutil>=2.8.0"]
 
-MIN_PY_VERSION = "3.5"
+MIN_PY_VERSION = "3.6"
 
 setup(
     name=PROJECT_PACKAGE_NAME,

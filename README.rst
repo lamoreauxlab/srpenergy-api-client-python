@@ -55,9 +55,8 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
         "demandList":[]
     }
 
-.. note:: Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
-
-
+.. note::
+    Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
 
 Installing
 ==========
@@ -193,3 +192,57 @@ Now that you have all test dependencies installed, you can run tests on the proj
 
 Package and Deploy
 ------------------
+
+After a successful build, packageing and deploying will:
+
+- Bump Version
+- Tag version in git
+- Create Release in git
+- Release to pypi
+
+Bump Version
+^^^^^^^^^^^^
+
+Change the version in the following files:
+
+- srpenergy/__init__.py
+- docs/conf.py
+
+Tag Version
+^^^^^^^^^^^
+
+Commit, tag, and push the new version
+
+.. code-block:: bash
+
+    git commit -m "Bump version"
+    git tag -a 1.3.1 -m "1.3.1"
+    git push --tags
+
+Create Release
+^^^^^^^^^^^^^^
+
+Name the Release the same as the tag name
+
+Release to pypi
+^^^^^^^^^^^^^^^
+
+Upgrade to the latest version of setuptools and create package and test
+
+.. code-block:: bash
+
+    python -m pip install --user --upgrade setuptools wheel # Get latest version
+    python setup.py sdist bdist_wheel
+    twine check dist/*
+
+Upload the package to test first
+
+.. code-block:: bash
+
+    python -m twine upload --repository testpypi dist/*
+
+Check that package looks ok. After testing, upload to the main repository
+
+.. code-block:: bash
+
+    python -m twine upload dist/*
