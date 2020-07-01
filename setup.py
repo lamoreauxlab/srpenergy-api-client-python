@@ -12,9 +12,7 @@ if sys.argv[-1] == "publish":
     os.system("python setup.py sdist upload")
     sys.exit()
 
-PROJECT_NAME = "Srp Energy"
 PROJECT_PACKAGE_NAME = "srpenergy"
-PROJECT_LICENSE = "MIT"
 PROJECT_AUTHOR = "Lamoreaux Lab"
 PROJECT_COPYRIGHT = " 2018-{}, {}".format(dt.now().year, PROJECT_AUTHOR)
 PROJECT_URL = "https://github.com/lamoreauxlab/srpenergy-api-client-python"
@@ -38,18 +36,6 @@ PACKAGES = find_packages(exclude=["tests", "tests.*"])
 REQUIRES = ["requests>=2.22.0", "python-dateutil>=2.8.0"]
 
 MIN_PY_VERSION = "3.5"
-
-
-def read(fname):
-    """Read README.rst into long_description.
-
-    ``long_description`` is what ends up on the PyPI front page.
-    """
-    with open(os.path.join(os.path.dirname(__file__), fname)) as readme_file:
-        contents = readme_file.read()
-
-    return contents
-
 
 setup(
     name=PROJECT_PACKAGE_NAME,
