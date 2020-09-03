@@ -10,6 +10,8 @@ import re
 from dateutil.parser import parse
 import requests
 
+from urllib.parse import unquote
+
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
 
@@ -277,8 +279,7 @@ class SrpEnergyClient:
                 )
 
                 response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
-                data = response.json()
-                xsrf_token = data["xsrfToken"]
+                xsrf_token = unquote(session.cookies["xsrf-token"])
 
                 response = session.get(
                     BASE_USAGE_URL
@@ -288,7 +289,7 @@ class SrpEnergyClient:
                     + str_startdate
                     + "&endDate="
                     + str_enddate,
-                    headers={"x-xsrf-token": xsrf_token},
+                    headers={"x-xsrf-token": xsrf_token}
                 )
 
                 data = response.json()
