@@ -40,6 +40,7 @@ class MockResponse:
         """Return mock json."""
         return self.json_data
 
+
 def get_mock_requests(routes):
     """Return a function that can be mocked for the given routes."""
     # noqa: D202

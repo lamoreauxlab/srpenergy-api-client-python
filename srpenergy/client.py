@@ -7,10 +7,10 @@ This module houses the main class used to fetch energy usage.
 from datetime import datetime, timedelta
 import re
 
+from urllib.parse import unquote
+
 from dateutil.parser import parse
 import requests
-
-from urllib.parse import unquote
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
