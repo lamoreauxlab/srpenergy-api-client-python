@@ -279,7 +279,7 @@ class SrpEnergyClient:
                 )
 
                 response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
-                xsrf_token = unquote(session.cookies["xsrf-token"])
+                xsrf_token = unquote(response.cookies["xsrf-token"])
 
                 response = session.get(
                     BASE_USAGE_URL
