@@ -16,9 +16,7 @@ MOCK_LOGIN_RESPONSE.json.return_value = {
     "redirectUrl": "",
 }
 
-MOCK_ANTI_FORGERY_RESPONSE = {
-    "message": "Success"
-}
+MOCK_ANTI_FORGERY_RESPONSE = {"message": "Success"}
 
 MOCK_ANTI_FORGERY_RESPONSE_COOKIES = {
     "xsrf-token": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2%7C207f"
@@ -47,7 +45,12 @@ def get_mock_requests(routes):
     def mocked_requests_get(*args, **kwargs):
 
         if "login/antiforgerytoken" in args[0]:
-            return MockResponse(MOCK_ANTI_FORGERY_RESPONSE, 200, MOCK_ANTI_FORGERY_RESPONSE_COOKIES, kwargs)
+            return MockResponse(
+                MOCK_ANTI_FORGERY_RESPONSE,
+                200,
+                MOCK_ANTI_FORGERY_RESPONSE_COOKIES,
+                kwargs,
+            )
 
         for pattern, response in routes:
             if pattern in args[0]:
