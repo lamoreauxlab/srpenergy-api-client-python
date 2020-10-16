@@ -7,6 +7,8 @@ This module houses the main class used to fetch energy usage.
 from datetime import datetime, timedelta
 import re
 
+from urllib.parse import unquote
+
 from dateutil.parser import parse
 import requests
 
@@ -277,8 +279,7 @@ class SrpEnergyClient:
                 )
 
                 response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
-                data = response.json()
-                xsrf_token = data["xsrfToken"]
+                xsrf_token = unquote(response.cookies["xsrf-token"])
 
                 response = session.get(
                     BASE_USAGE_URL
@@ -288,7 +289,7 @@ class SrpEnergyClient:
                     + str_startdate
                     + "&endDate="
                     + str_enddate,
-                    headers={"x-xsrf-token": xsrf_token},
+                    headers={"x-xsrf-token": xsrf_token}
                 )
 
                 data = response.json()

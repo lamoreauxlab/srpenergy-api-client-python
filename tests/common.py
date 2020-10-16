@@ -17,8 +17,11 @@ MOCK_LOGIN_RESPONSE.json.return_value = {
 }
 
 MOCK_ANTI_FORGERY_RESPONSE = {
-    "message": "Success",
-    "xsrfToken": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2|207f",
+    "message": "Success"
+}
+
+MOCK_ANTI_FORGERY_RESPONSE_COOKIES = {
+    "xsrf-token": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2%7C207f"
 }
 
 
@@ -26,10 +29,11 @@ MOCK_ANTI_FORGERY_RESPONSE = {
 class MockResponse:
     """Mock Response."""
 
-    def __init__(self, json_data, status_code, kwargs):
+    def __init__(self, json_data, status_code, cookies, kwargs):
         """Create Mock Response."""
         self.json_data = json_data
         self.status_code = status_code
+        self.cookies = cookies
         self.kwargs = kwargs
 
     def json(self):
@@ -43,12 +47,12 @@ def get_mock_requests(routes):
     def mocked_requests_get(*args, **kwargs):
 
         if "login/antiforgerytoken" in args[0]:
-            return MockResponse(MOCK_ANTI_FORGERY_RESPONSE, 200, kwargs)
+            return MockResponse(MOCK_ANTI_FORGERY_RESPONSE, 200, MOCK_ANTI_FORGERY_RESPONSE_COOKIES, kwargs)
 
         for pattern, response in routes:
             if pattern in args[0]:
-                return MockResponse(response, 200, kwargs)
+                return MockResponse(response, 200, {}, kwargs)
 
-        return MockResponse("Not Found", 200, kwargs)
+        return MockResponse("Not Found", 200, {}, kwargs)
 
     return mocked_requests_get
