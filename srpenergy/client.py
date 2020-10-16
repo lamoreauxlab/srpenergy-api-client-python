@@ -6,7 +6,6 @@ This module houses the main class used to fetch energy usage.
 
 from datetime import datetime, timedelta
 import re
-
 from urllib.parse import unquote
 
 from dateutil.parser import parse
@@ -289,7 +288,7 @@ class SrpEnergyClient:
                     + str_startdate
                     + "&endDate="
                     + str_enddate,
-                    headers={"x-xsrf-token": xsrf_token}
+                    headers={"x-xsrf-token": xsrf_token},
                 )
 
                 data = response.json()
