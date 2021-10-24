@@ -5,3 +5,4 @@ Documentation
 .. toctree::
     module
     develop
+    api
