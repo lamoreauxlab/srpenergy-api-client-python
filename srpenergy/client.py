@@ -261,7 +261,7 @@ class SrpEnergyClient:
             raise ValueError("Parameter startdate can not be greater than enddate.")
 
         # Validate date ranges
-        if startdate > datetime.now():
+        if startdate.timestamp() > datetime.now().timestamp():
             raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
