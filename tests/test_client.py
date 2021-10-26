@@ -1,5 +1,5 @@
 """The tests for the Srp Energy API."""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 
 import pytest
@@ -288,3 +288,25 @@ def test_error_usage_payload():
 
         with pytest.raises(Exception):
             client.usage(start_date, end_date)
+
+
+def test_date_timezone_error():
+    """Test error with invalid usage payload."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+
+        session_post.return_value = MOCK_LOGIN_RESPONSE
+        session_get.side_effect = get_mock_requests(ROUTES)
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        start_date = datetime.now(timezone.utc) + timedelta(days=-1)
+        end_date = datetime.now(timezone.utc)
+
+        usage = client.usage(start_date, end_date)
+
+        assert len(usage) == 3
+
+        _date, _hour, _isodate, kwh, cost = usage[-1]
+
+        assert kwh == 0.4
+        assert cost == 0.08
