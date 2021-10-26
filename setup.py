@@ -14,21 +14,21 @@ if sys.argv[-1] == "publish":
 
 PROJECT_PACKAGE_NAME = "srpenergy"
 PROJECT_AUTHOR = "Lamoreaux Lab"
-PROJECT_COPYRIGHT = " 2018-{}, {}".format(dt.now().year, PROJECT_AUTHOR)
+PROJECT_COPYRIGHT = f" 2018-{dt.now().year}, {PROJECT_AUTHOR}"
 PROJECT_URL = "https://github.com/lamoreauxlab/srpenergy-api-client-python"
 PROJECT_EMAIL = "bklamoreaux@gmail.com"
 
 PROJECT_GITHUB_USERNAME = "lamoreauxlab"
 PROJECT_GITHUB_REPOSITORY = "srpenergy-api-client-python"
 
-GITHUB_PATH = "{}/{}".format(PROJECT_GITHUB_USERNAME, PROJECT_GITHUB_REPOSITORY)
-GITHUB_URL = "https://github.com/{}".format(GITHUB_PATH)
+GITHUB_PATH = f"{PROJECT_GITHUB_USERNAME}/{PROJECT_GITHUB_REPOSITORY}"
+GITHUB_URL = f"https://github.com/{GITHUB_PATH}"
 
-DEV_DOCS_URL = "https://{}.readthedocs.io/".format(PROJECT_GITHUB_REPOSITORY)
+DEV_DOCS_URL = f"https://{PROJECT_GITHUB_REPOSITORY}.readthedocs.io/"
 
 PROJECT_URLS = {
-    "Bug Reports": "{}/issues".format(GITHUB_URL),
-    "Dev Docs": "{}/en/latest/".format(DEV_DOCS_URL),
+    "Bug Reports": f"{GITHUB_URL}/issues",
+    "Dev Docs": f"{DEV_DOCS_URL}/en/latest/",
 }
 
 PACKAGES = find_packages(exclude=["tests", "tests.*"])

@@ -15,7 +15,7 @@ author = "Brig Lamoreaux"
 # The short X.Y version
 version = "1.3"
 # The full version, including alpha/beta/rc tags
-release = "1.3.4"
+release = "1.3.5"
 # version = re.sub(r'(\d+\.\d+)\.\d+(.*)', r'\1\2', srpenergy.__version__)
 # version = re.sub(r'(\.dev\d+).*?$', r'\1', version)
 
