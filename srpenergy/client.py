@@ -50,8 +50,10 @@ def get_rate(str_usage_time):
 
     try:
         usage_time = parse(str_usage_time)
-    except ValueError:
-        raise ValueError("Parameter str_usage_time should be parsed as a datetime.")
+    except ValueError as error:
+        raise ValueError(
+            "Parameter str_usage_time should be parsed as a datetime."
+        ) from error
 
     summer_start_date = datetime(usage_time.year, 5, 1, 0, 0, 0)
     summer_end_date = datetime(usage_time.year, 11, 1, 0, 0, 0) - timedelta(seconds=1)

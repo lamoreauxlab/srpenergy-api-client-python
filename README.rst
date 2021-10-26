@@ -109,8 +109,6 @@ For Time of use plans pass in the argument `is_tou`
 Development
 ===========
 
-
-
 Style Guidelines
 ----------------
 
@@ -181,7 +179,7 @@ Now that you have all test dependencies installed, you can run tests on the proj
 
 .. code-block:: bash
 
-    isort -rc .
+    isort .
     codespell  --skip="./.*,*.csv,*.json,*.pyc,./docs/_build/*,./htmlcov/*"
     black setup.py srpenergy tests
     flake8 setup.py srpenergy tests
@@ -189,6 +187,17 @@ Now that you have all test dependencies installed, you can run tests on the proj
     pydocstyle setup.py srpenergy tests
     python -m pytest tests
     python -m pytest --cov-report term-missing --cov=srpenergy
+
+Building Docs
+-------------
+
+Build the documentation locally with 
+
+.. code-block:: bash
+
+    cd docs
+    python -m sphinx -T -b html -d _build/doctrees -D language=en . _build/html
+
 
 Package and Deploy
 ------------------
