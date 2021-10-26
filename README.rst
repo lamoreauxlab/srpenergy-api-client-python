@@ -118,10 +118,10 @@ We use `Black <https://github.com/psf/black>`_ for uncompromised code formatting
 
 Summary of the most relevant points:
 
- - Comments should be full sentences and end with a period.
- - `Imports <https://www.python.org/dev/peps/pep-0008/#imports>`_  should be ordered.
- - Constants and the content of lists and dictionaries should be in alphabetical order.
- - It is advisable to adjust IDE or editor settings to match those requirements.
+- Comments should be full sentences and end with a period.
+- `Imports <https://www.python.org/dev/peps/pep-0008/#imports>`_  should be ordered.
+- Constants and the content of lists and dictionaries should be in alphabetical order.
+- It is advisable to adjust IDE or editor settings to match those requirements.
 
 Ordering of imports
 -------------------
@@ -131,7 +131,7 @@ Instead of order the imports manually, use `isort <https://github.com/timothycro
 .. code-block:: bash
 
     pip3 install isort
-    isort -rc .
+    isort .
 
 
 Use new style string formatting
@@ -158,8 +158,8 @@ Testing
 
 As it states in the `Style Guidelines`_ section all code is checked to verify the following:
 
- - All the unit tests pass
- - All code passes the checks from the linting tools
+- All the unit tests pass
+- All code passes the checks from the linting tools
 
 Local testing is done using `Tox <https://tox.readthedocs.io/en/latest/>`_. To start the tests, activate the virtual environment and simply run the command:
 
