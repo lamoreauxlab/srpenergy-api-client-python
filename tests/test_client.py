@@ -73,9 +73,62 @@ MOCK_USAGE_RESPONSE = {
     "demandList": (),
 }
 
+MOCK_USAGE_RESPONSE_NO_TOTAL = {
+    "hourlyUsageList": (
+        {
+            "date": "2019-10-09T00:00:00",
+            "hour": "2019-10-09T00:00:00",
+            "onPeakKwh": 0.0,
+            "offPeakKwh": 0.4,
+            "shoulderKwh": 0.0,
+            "superOffPeakKwh": 0.0,
+            "totalKwh": 0,
+            "onPeakCost": 0.0,
+            "offPeakCost": 0.08,
+            "shoulderCost": 0.0,
+            "superOffPeakCost": 0.0,
+            "totalCost": 0,
+        },
+        {
+            "date": "2019-10-09T01:00:00",
+            "hour": "2019-10-09T01:00:00",
+            "onPeakKwh": 0.0,
+            "offPeakKwh": 0.5,
+            "shoulderKwh": 0.0,
+            "superOffPeakKwh": 0.0,
+            "totalKwh": 0,
+            "onPeakCost": 0.0,
+            "offPeakCost": 0.09,
+            "shoulderCost": 0.0,
+            "superOffPeakCost": 0.0,
+            "totalCost": 0,
+        },
+        {
+            "date": "2019-10-09T02:00:00",
+            "hour": "2019-10-09T02:00:00",
+            "onPeakKwh": 0.4,
+            "offPeakKwh": 0.0,
+            "shoulderKwh": 0.0,
+            "superOffPeakKwh": 0.0,
+            "totalKwh": 0,
+            "onPeakCost": 0.08,
+            "offPeakCost": 0.0,
+            "shoulderCost": 0.0,
+            "superOffPeakCost": 0.0,
+            "totalCost": 0,
+        },
+    ),
+    "demandList": (),
+}
+
 ROUTES = [
     (TEST_BAD_ACCOUNT_ID, MOCK_BAD_USAGE_RESPONSE),
     ("usage/hourlydetail", MOCK_USAGE_RESPONSE),
+]
+
+ROUTES_NO_TOTAL = [
+    (TEST_BAD_ACCOUNT_ID, MOCK_BAD_USAGE_RESPONSE),
+    ("usage/hourlydetail", MOCK_USAGE_RESPONSE_NO_TOTAL),
 ]
 
 
@@ -244,6 +297,35 @@ def test_latest_day_usage_kw():
 
         assert kwh == 0.4
         assert cost == 0.08
+
+
+def test_latest_day_usage_kw_no_total():
+    """Test Latest Day Usage for kwh."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+
+        session_post.return_value = MOCK_LOGIN_RESPONSE
+        session_get.side_effect = get_mock_requests(ROUTES_NO_TOTAL)
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        start_date = datetime(2018, 9, 19, 0, 0, 0)
+        end_date = datetime(2018, 9, 19, 23, 0, 0)
+
+        usage = client.usage(start_date, end_date)
+
+        assert len(usage) == 3
+
+        _date, _hour, _isodate, kwh, cost = usage[-1]
+        total_kw = 0
+        total_cost = 0
+        for _, _, _, kw, c in usage:
+            total_kw += kw
+            total_cost += c
+
+        assert kwh == 0.4
+        assert cost == 0.08
+        assert total_kw == 1.3
+        assert total_cost == 0.25
 
 
 def test_validate_user():

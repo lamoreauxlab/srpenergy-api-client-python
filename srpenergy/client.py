@@ -300,7 +300,24 @@ class SrpEnergyClient:
                 for row in hourly_usage_list:
 
                     total_kwh = row["totalKwh"]
+                    if total_kwh == 0:
+                        "Attempting to build the total_kwh from separate fields"
+                        total_kwh = (
+                            row["onPeakKwh"]
+                            + row["offPeakKwh"]
+                            + row["shoulderKwh"]
+                            + row["superOffPeakKwh"]
+                        )
+
                     total_cost = row["totalCost"]
+                    if total_cost == 0:
+                        "Attempting to build the total_cost from separate fields"
+                        total_cost = (
+                            row["onPeakCost"]
+                            + row["offPeakCost"]
+                            + row["shoulderCost"]
+                            + row["superOffPeakCost"]
+                        )
 
                     # Check if on Time of Use Plan
                     if is_tou:
