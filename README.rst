@@ -57,8 +57,8 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
 
 .. note::
     Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
-    
-    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. Those values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``. 
+
+    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. Those values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``.
 
 Installing
 ==========
@@ -128,8 +128,11 @@ This section will configure your computer to develop, test, and debug the projec
     source .venv/bin/activate
 
     # Install Project
-    python -m pip install -r requirements.txt
+    python -m pip install -r requirements_test.txt
     python -m pip install -e .
+
+    # Create git hook scripts
+    pre-commit install
 
 Style Guidelines
 ----------------
@@ -183,15 +186,7 @@ As it states in the `Style Guidelines`_ section all code is checked to verify th
 - All the unit tests pass
 - All code passes the checks from the linting tools
 
-Local testing is done using `Tox <https://tox.readthedocs.io/en/latest/>`_. To start the tests, activate the virtual environment and simply run the command:
-
-.. code-block:: bash
-
-    tox
-
-**Testing outside of Tox**
-
-Running ``tox`` will invoke the full test suite. To be able to run the specific test suites without tox, you'll need to install the test dependencies into your Python environment:
+Install the test dependencies into your Python environment:
 
 .. code-block:: bash
 
@@ -208,17 +203,25 @@ Now that you have all test dependencies installed, you can run tests on the proj
     pylint setup.py srpenergy tests
     pydocstyle setup.py srpenergy tests
     python -m pytest tests
-    python -m pytest --cov-report term-missing --cov=srpenergy
+    python -m pytest --cov-report term-missing --cov=srpenergy tests
 
 Building Docs
 -------------
 
-Build the documentation locally with 
+Build the documentation locally with
 
 .. code-block:: bash
 
     cd docs
     python -m sphinx -T -b html -d _build/doctrees -D language=en . _build/html
+
+Run Git Pre-commit
+------------------
+
+If you want to manually run all pre-commit hooks on the repository, run pre-commit run --all-files. To run individual hooks use pre-commit run <hook_id>.
+pre-commit run --all-files
+.. code-block:: bash
+    pre-commit run --all-files
 
 
 Package and Deploy

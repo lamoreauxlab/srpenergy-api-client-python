@@ -24,7 +24,7 @@ password
 
 .. code-block:: bash
 
-    # Post to 
+    # Post to
     https://myaccount.srpnet.com/myaccountapi/api/login/authorize
 
     # Include x-www-form-urlencoded parameters
@@ -37,8 +37,8 @@ Fetch Xsrf token
 Then fetch the xsrf-token by calling:
 
 .. code-block:: bash
-    
-    # Get 
+
+    # Get
     https://myaccount.srpnet.com/myaccountapi/api/login/authorize
 
     # Save the result of the xsrf-token cookie
@@ -62,7 +62,7 @@ xsrf-token
 
 
 
-.. code-block:: 
+.. code-block::
 
     https://myaccount.srpnet.com/myaccountapi/api/usage/hourlydetail?billaccount="
                     + <code>
@@ -102,5 +102,5 @@ Results
 
 .. note::
     Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
-    
-    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. The values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``. 
+
+    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. The values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``.
