@@ -17,3 +17,6 @@ disable=
 
 [FORMAT]
 expected-line-ending-format=LF
+
+[SIMILARITIES]
+ignore-imports = yes
