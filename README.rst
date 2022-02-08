@@ -256,7 +256,10 @@ Commit, tag, and push the new version
 Create Release
 ^^^^^^^^^^^^^^
 
-Name the Release the same as the tag name
+- Create a new Release
+- Name the Release the same as the tag name
+- Auto-generate release notes.
+
 
 Release to pypi
 ^^^^^^^^^^^^^^^
