@@ -15,7 +15,7 @@ author = "Brig Lamoreaux"
 # The short X.Y version
 version = "1.3"
 # The full version, including alpha/beta/rc tags
-release = "1.3.5"
+release = "1.3.6"
 # version = re.sub(r'(\d+\.\d+)\.\d+(.*)', r'\1\2', srpenergy.__version__)
 # version = re.sub(r'(\.dev\d+).*?$', r'\1', version)
 
@@ -82,7 +82,7 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+# html_static_path = ["_static"]
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

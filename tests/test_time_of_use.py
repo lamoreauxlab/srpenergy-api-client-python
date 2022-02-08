@@ -5,13 +5,13 @@ from unittest.mock import patch
 from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
+    MOCK_LOGIN_RESPONSE,
     PATCH_GET,
     PATCH_POST,
     TEST_PASSWORD,
     TEST_USER_NAME,
     get_mock_requests,
 )
-from tests.common import MOCK_LOGIN_RESPONSE  # pylint: disable=R0801
 
 TEST_ACCOUNT_TOU_ID = "987654321"
 

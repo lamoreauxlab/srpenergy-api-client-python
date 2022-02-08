@@ -301,7 +301,7 @@ class SrpEnergyClient:
 
                     total_kwh = row["totalKwh"]
                     if total_kwh == 0:
-                        "Attempting to build the total_kwh from separate fields"
+                        # Build the total_kwh from separate fields for EZ-3.
                         total_kwh = (
                             row["onPeakKwh"]
                             + row["offPeakKwh"]
@@ -311,7 +311,7 @@ class SrpEnergyClient:
 
                     total_cost = row["totalCost"]
                     if total_cost == 0:
-                        "Attempting to build the total_cost from separate fields"
+                        # Build the total_cost from separate fields for EZ-3.
                         total_cost = (
                             row["onPeakCost"]
                             + row["offPeakCost"]

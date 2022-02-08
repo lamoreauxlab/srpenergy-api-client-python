@@ -102,3 +102,5 @@ Results
 
 .. note::
     Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
+    
+    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. The values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``. 

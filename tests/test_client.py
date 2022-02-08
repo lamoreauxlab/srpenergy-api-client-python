@@ -7,13 +7,13 @@ import pytest
 from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
+    MOCK_LOGIN_RESPONSE,
     PATCH_GET,
     PATCH_POST,
     TEST_PASSWORD,
     TEST_USER_NAME,
     get_mock_requests,
 )
-from tests.common import MOCK_LOGIN_RESPONSE  # pylint: disable=R0801
 
 TEST_ACCOUNT_ID = "123456789"
 TEST_BAD_ACCOUNT_ID = "888999000"
@@ -316,16 +316,9 @@ def test_latest_day_usage_kw_no_total():
         assert len(usage) == 3
 
         _date, _hour, _isodate, kwh, cost = usage[-1]
-        total_kw = 0
-        total_cost = 0
-        for _, _, _, kw, c in usage:
-            total_kw += kw
-            total_cost += c
 
         assert kwh == 0.4
         assert cost == 0.08
-        assert total_kw == 1.3
-        assert total_cost == 0.25
 
 
 def test_validate_user():

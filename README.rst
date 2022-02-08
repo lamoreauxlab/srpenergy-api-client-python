@@ -57,6 +57,8 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
 
 .. note::
     Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
+    
+    EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. Those values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``. 
 
 Installing
 ==========
@@ -108,6 +110,26 @@ For Time of use plans pass in the argument `is_tou`
 
 Development
 ===========
+
+Configure Dev Environment
+-------------------------
+
+This section will configure your computer to develop, test, and debug the project.
+
+.. code-block::bash
+
+    # Copy Project to local computer
+    cd /path/to/src/
+    git clone https://github.com/lamoreauxlab/srpenergy-api-client-python.git
+    cd /path/to/src/srpenergy-api-client-python
+
+    # Create Python Virtual Environment and activate
+    python -m venv .venv
+    source .venv/bin/activate
+
+    # Install Project
+    python -m pip install -r requirements.txt
+    python -m pip install -e .
 
 Style Guidelines
 ----------------
