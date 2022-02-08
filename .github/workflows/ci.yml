@@ -61,7 +61,7 @@ jobs:
           pip install -r requirements_test.txt
       - name: Analysing the code with pylint
         run: |
-          pylint $(git ls-files '*.py')
+          pylint setup.py srpenergy tests
 
   pytest:
     runs-on: ubuntu-latest
@@ -87,5 +87,5 @@ jobs:
           python --version
           python -m pytest --cov=srpenergy --cov-report=xml  \
             -o console_output_style=count \
-            -p no:sugar
+            -p no:sugar \
             tests
