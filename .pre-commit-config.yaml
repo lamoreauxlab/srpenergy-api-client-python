@@ -37,6 +37,11 @@ repos:
       rev: v5.10.1
       hooks:
         - id: isort
+    - repo: 'https://github.com/myint/rstcheck'
+      rev: 3f929574
+      hooks:
+        - id: rstcheck
+          exclude: 'docs/module.rst'
     - repo: 'https://github.com/pre-commit/pre-commit-hooks'
       rev: v4.1.0
       hooks:
