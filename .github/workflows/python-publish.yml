@@ -1,4 +1,4 @@
-name: Publish tag to Test Pypi
+name: Publish PyPI
 
 on:
   workflow_dispatch:
@@ -23,6 +23,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      ref:  ${{ github.event.inputs.release_tag }}
 
     - name: Set up Python
       uses: actions/setup-python@v2
