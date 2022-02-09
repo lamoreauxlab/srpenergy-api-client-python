@@ -23,7 +23,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      ref:  ${{ github.event.inputs.release_tag }}
+      with:
+        ref:  '${{ github.event.inputs.release_tag }}'
 
     - name: Set up Python
       uses: actions/setup-python@v2
