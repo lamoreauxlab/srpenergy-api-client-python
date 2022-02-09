@@ -16,3 +16,4 @@ pylint==2.12.2
 pylint-strict-informational==0.1
 pytest==7.0.0
 pytest-cov==3.0.0
+rstcheck==3.3.1

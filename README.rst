@@ -202,6 +202,7 @@ Now that you have all test dependencies installed, you can run tests on the proj
     flake8 setup.py srpenergy tests
     pylint setup.py srpenergy tests
     pydocstyle setup.py srpenergy tests
+    rstcheck README.rst
     python -m pytest tests
     python -m pytest --cov-report term-missing --cov=srpenergy tests
 
@@ -218,10 +219,15 @@ Build the documentation locally with
 Run Git Pre-commit
 ------------------
 
-If you want to manually run all pre-commit hooks on the repository, run pre-commit run --all-files. To run individual hooks use pre-commit run <hook_id>.
-pre-commit run --all-files
+Run pre-commit hooks on the repository.
+
 .. code-block:: bash
+
+    # Run all hooks
     pre-commit run --all-files
+
+    # Run a specific hook
+    pre-commit run hook_id
 
 
 Package and Deploy

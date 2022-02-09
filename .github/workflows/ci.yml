@@ -102,6 +102,9 @@ jobs:
       - name: Run trailing-whitespace
         run: |
           pre-commit run --hook-stage commit trailing-whitespace --all-files --show-diff-on-failure
+      - name: Run rstcheck
+        run: |
+          pre-commit run --hook-stage commit rstcheck --all-files --show-diff-on-failure
 
 
   pylint:
