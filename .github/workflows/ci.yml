@@ -21,9 +21,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements_test.txt
+      - name: Install pre-commit
+        run : |
+            pre-commit install
       - name: Run black
         run: |
-          black setup.py srpenergy tests
+          pre-commit run --hook-stage manual black --all-files --show-diff-on-failure
 
   lint-flake8:
     name: Check flake8
@@ -40,9 +43,69 @@ jobs:
         run: |
             python -m pip install --upgrade pip
             pip install -r requirements_test.txt
+      - name: Install pre-commit
+        run : |
+            pre-commit install
       - name: Run flake8
         run: |
-          flake8 setup.py srpenergy tests
+          pre-commit run --hook-stage manual flake8 --all-files
+
+  lint-isort:
+    name: Check isort
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code from github
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+        uses: actions/setup-python@v2
+        id: python
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements_test.txt
+      - name: Run flake8
+        run: |
+          isort setup.py srpenergy tests
+
+  lint-other:
+    name: Check other linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code from github
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+        uses: actions/setup-python@v2
+        id: python
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements_test.txt
+      - name: Install pre-commit
+        run : |
+            pre-commit install
+      - name: Run check-yaml
+        run: |
+          pre-commit run --hook-stage commit check-yaml --all-files --show-diff-on-failure
+      - name: Run codespell
+        run: |
+          pre-commit run --hook-stage commit codespell --all-files --show-diff-on-failure
+      - name: Run bandit
+        run: |
+          pre-commit run --hook-stage commit bandit --all-files --show-diff-on-failure
+      - name: Run bandit
+        run: |
+          pre-commit run --hook-stage commit bandit --all-files --show-diff-on-failure
+      - name: Run end-of-file-fixer
+        run: |
+          pre-commit run --hook-stage commit end-of-file-fixer --all-files --show-diff-on-failure
+      - name: Run trailing-whitespace
+        run: |
+          pre-commit run --hook-stage commit trailing-whitespace --all-files --show-diff-on-failure
+
 
   pylint:
     name: Check pylint
@@ -67,7 +130,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - lint-black
-      - lint-flake8
+      - lint-other
+      - lint-isort
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
