@@ -96,9 +96,6 @@ jobs:
       - name: Run bandit
         run: |
           pre-commit run --hook-stage commit bandit --all-files --show-diff-on-failure
-      - name: Run bandit
-        run: |
-          pre-commit run --hook-stage commit bandit --all-files --show-diff-on-failure
       - name: Run end-of-file-fixer
         run: |
           pre-commit run --hook-stage commit end-of-file-fixer --all-files --show-diff-on-failure
