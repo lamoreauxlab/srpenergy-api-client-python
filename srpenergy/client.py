@@ -3,13 +3,24 @@
 This module houses the main class used to fetch energy usage.
 
 """
-
 from datetime import datetime, timedelta
+import logging
 import re
 from urllib.parse import unquote
 
 from dateutil.parser import parse
 import requests
+
+# import httplib
+# httplib.HTTPConnection.debuglevel = 1
+
+logging.basicConfig(format='%(asctime)s %(module)s %(filename)s:%(lineno)s - %(message)s')
+
+logging.getLogger("requests.packages.urllib3").setLevel(logging.DEBUG)
+logging.getLogger("requests").setLevel(logging.DEBUG)
+logging.getLogger("urllib3").setLevel(logging.DEBUG)
+
+_LOGGER = logging.getLogger(__name__)
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
@@ -191,7 +202,7 @@ class SrpEnergyClient:
             with requests.Session() as session:
 
                 response = session.post(
-                    BASE_USAGE_URL + "/login/authorize",
+                    BASE_USAGE_URL + "login/authorize",
                     data={"username": self.username, "password": self.password},
                 )
                 data = response.json()
@@ -200,7 +211,8 @@ class SrpEnergyClient:
 
                 return valid
 
-        except Exception:  # pylint: disable=W0703
+        except Exception as err:  # pylint: disable=W0703
+            _LOGGER.error("Failed to log in %s", err)
             return False
 
     def usage(self, startdate, enddate, is_tou=False):  # pylint: disable=R0914
