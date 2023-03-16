@@ -14,7 +14,9 @@ import requests
 # import httplib
 # httplib.HTTPConnection.debuglevel = 1
 
-logging.basicConfig(format='%(asctime)s %(module)s %(filename)s:%(lineno)s - %(message)s')
+logging.basicConfig(
+    format="%(asctime)s %(module)s %(filename)s:%(lineno)s - %(message)s"
+)
 
 logging.getLogger("requests.packages.urllib3").setLevel(logging.DEBUG)
 logging.getLogger("requests").setLevel(logging.DEBUG)
