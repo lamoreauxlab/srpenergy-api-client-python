@@ -107,3 +107,4 @@ venv.bak/
 launch.json
 settings.json
 local.env
+.env
