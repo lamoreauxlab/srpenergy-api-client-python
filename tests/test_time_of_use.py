@@ -659,7 +659,6 @@ ROUTES = [
 def test_time_of_use_summer_off_peak_usage():
     """Test Time of Use for summer Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -681,7 +680,6 @@ def test_time_of_use_summer_off_peak_usage():
 def test_time_of_use_summer_on_peak_usage():
     """Test Time of Use for summer on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -703,7 +701,6 @@ def test_time_of_use_summer_on_peak_usage():
 def test_time_of_use_peak_summer_off_peak_usage():
     """Test Time of Use for peak summer Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -725,7 +722,6 @@ def test_time_of_use_peak_summer_off_peak_usage():
 def test_time_of_use_peak_summer_on_peak_usage():
     """Test Time of Use for peak summer on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -747,7 +743,6 @@ def test_time_of_use_peak_summer_on_peak_usage():
 def test_time_of_use_winter_off_peak_usage():
     """Test Time of Use for winter Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -769,7 +764,6 @@ def test_time_of_use_winter_off_peak_usage():
 def test_time_of_use_winter_on_peak_usage():
     """Test Time of Use for winter on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -808,7 +802,6 @@ def test_daily_aggregation_tou():
     #         }
 
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 

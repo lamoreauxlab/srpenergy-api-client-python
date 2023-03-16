@@ -41,9 +41,9 @@ class MockResponse:
 
 def get_mock_requests(routes):
     """Return a function that can be mocked for the given routes."""
+
     # noqa: D202
     def mocked_requests_get(*args, **kwargs):
-
         if "login/antiforgerytoken" in args[0]:
             return MockResponse(
                 MOCK_ANTI_FORGERY_RESPONSE,

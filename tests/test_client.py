@@ -179,7 +179,6 @@ def test_bad_parameter_account_id_hyphens():
 def test_bad_parameter_start_date_string():
     """Test start date is date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -194,7 +193,6 @@ def test_bad_parameter_start_date_string():
 def test_bad_parameter_end_date_string():
     """Test end date is date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -209,7 +207,6 @@ def test_bad_parameter_end_date_string():
 def test_bad_parameter_start_date_after_now():
     """Test start date is not after Now."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -225,7 +222,6 @@ def test_bad_parameter_start_date_after_now():
 def test_bad_parameter_start_date_after_end_date():
     """Test start date is not after end date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -241,7 +237,6 @@ def test_bad_parameter_start_date_after_end_date():
 def test_get_usage():
     """Test usage."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -258,7 +253,6 @@ def test_get_usage():
 def test_single_day_usage_kw():
     """Test Single Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -280,7 +274,6 @@ def test_single_day_usage_kw():
 def test_latest_day_usage_kw():
     """Test Latest Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -302,7 +295,6 @@ def test_latest_day_usage_kw():
 def test_latest_day_usage_kw_no_total():
     """Test Latest Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES_NO_TOTAL)
 
@@ -324,7 +316,6 @@ def test_latest_day_usage_kw_no_total():
 def test_validate_user():
     """Test Validation of user."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -338,7 +329,6 @@ def test_validate_user():
 def test_error_validate_user():
     """Test error Validation of user."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_BAD_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -352,7 +342,6 @@ def test_error_validate_user():
 def test_error_usage_payload():
     """Test error with invalid usage payload."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -368,7 +357,6 @@ def test_error_usage_payload():
 def test_date_timezone_error():
     """Test error with invalid usage payload."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 

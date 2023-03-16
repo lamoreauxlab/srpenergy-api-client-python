@@ -149,7 +149,6 @@ class SrpEnergyClient:
     """
 
     def __init__(self, accountid, username, password):  # noqa: D107
-
         # Validate parameters
         if accountid is None:
             raise TypeError("Parameter account can not be none.")
@@ -200,9 +199,7 @@ class SrpEnergyClient:
 
         """
         try:
-
             with requests.Session() as session:
-
                 response = session.post(
                     BASE_USAGE_URL + "login/authorize",
                     data={"username": self.username, "password": self.password},
@@ -281,13 +278,11 @@ class SrpEnergyClient:
             raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
-
             # Convert datetime to strings
             str_startdate = startdate.strftime("%m-%d-%Y")
             str_enddate = enddate.strftime("%m-%d-%Y")
 
             with requests.Session() as session:
-
                 response = session.post(
                     BASE_USAGE_URL + "login/authorize",
                     data={"username": self.username, "password": self.password},
@@ -312,7 +307,6 @@ class SrpEnergyClient:
 
                 usage = []
                 for row in hourly_usage_list:
-
                     total_kwh = row["totalKwh"]
                     if total_kwh == 0:
                         # Build the total_kwh from separate fields for EZ-3.
@@ -335,7 +329,6 @@ class SrpEnergyClient:
 
                     # Check if on Time of Use Plan
                     if is_tou:
-
                         rate, is_peak = get_rate(row["date"])
 
                         if is_peak:
