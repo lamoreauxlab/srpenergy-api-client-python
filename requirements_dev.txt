@@ -1,19 +1,18 @@
 # Dev Requirements
 -r requirements.txt
 
-bandit==1.7.2
+bandit==1.7.4
 black==24.3.0
-codecov==2.1.12
-codespell==2.1.0
-coverage==6.3.1
-coveralls==3.3.1
-flake8==4.0.1
+codespell==2.2.6
+flake8==7.0.0
 flake8-docstrings==1.6.0
-isort==5.10.1
-pre-commit==2.17.0
-pydocstyle==6.1.1
-pylint==2.12.2
+isort==5.13.2
+pre-commit==3.6.0
+pydocstyle==6.3.0
+pylint==3.0.3
+pytest-cov==4.1.0
 pylint-strict-informational==0.1
-pytest==7.0.0
-pytest-cov==3.0.0
-rstcheck==3.3.1
+pytest==7.4.4
+rstcheck==6.2.0
+Sphinx==7.2.6
+tomli==2.0.1

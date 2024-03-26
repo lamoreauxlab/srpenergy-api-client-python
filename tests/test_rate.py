@@ -1,4 +1,5 @@
 """The tests for the Srp Energy API Rate calculation."""
+
 import pytest
 
 from srpenergy.client import get_rate

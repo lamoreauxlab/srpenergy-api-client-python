@@ -1,4 +1,5 @@
 """Shared methods and const for tests."""
+
 from unittest.mock import Mock
 
 PATCH_GET = "srpenergy.client.requests.Session.get"
@@ -41,6 +42,7 @@ class MockResponse:
 
 def get_mock_requests(routes):
     """Return a function that can be mocked for the given routes."""
+
     # noqa: D202
     def mocked_requests_get(*args, **kwargs):
 

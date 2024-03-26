@@ -106,4 +106,4 @@ venv.bak/
 #VSCode
 launch.json
 settings.json
-local.env
+.env

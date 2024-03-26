@@ -1,4 +1,5 @@
 """The tests for the Srp Energy API."""
+
 from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 

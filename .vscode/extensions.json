@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+      "esbenp.prettier-vscode",
+      "GitHub.copilot",
+      "github.vscode-github-actions",
+      "hediet.vscode-drawio",
+      "IronGeek.vscode-env",
+      "ms-azuretools.vscode-docker",
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "tamasfe.even-better-toml"
+    ]
+}

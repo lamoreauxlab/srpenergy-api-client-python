@@ -1,4 +1,5 @@
 """Readthedocs Config file."""
+
 import os
 import sys
 

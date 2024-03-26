@@ -56,7 +56,7 @@ The data returned from the hourly url ``https://myaccount.srpnet.com/myaccountap
     }
 
 .. note::
-    Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the fomula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
+    Time of use customers do not receive a ``totalKwh`` or ``totalCost`` from the api. These values are calculated from ``onPeakKwh``, ``offPeakKwh``, and the formula defined by the SRP `TOU price plan sheet <https://srpnet.com/prices/pdfx/April2015/E-26.pdf>`_
 
     EZ3 customers show 0.0 for ``totalKwh`` and ``totalCost``. Those values are split between ``onPeak``, ``offPeak``, ``shoulder``, and ``superOffPeak``.
 
@@ -111,28 +111,58 @@ For Time of use plans pass in the argument `is_tou`
 Development
 ===========
 
-Configure Dev Environment
--------------------------
+You'll need to set up a development environment if you want to develop a new feature or fix issues. The project uses a docker based devcontainer to ensure a consistent development environment.
+- Open the project in VSCode and it will prompt you to open the project in a devcontainer. This will have all the required tools installed and configured.
 
-This section will configure your computer to develop, test, and debug the project.
+Setup local dev environment
+---------------------------
+
+If you want to develop outside of a docker devcontainer you can use the following commands to setup your environment.
+
+* Install Python
+* Configure linting and formatting tools
 
 .. code-block::bash
-
-    # Copy Project to local computer
+    # Clone Project to local computer
     cd /path/to/src/
     git clone https://github.com/lamoreauxlab/srpenergy-api-client-python.git
-    cd /path/to/src/srpenergy-api-client-python
+    cd srpenergy-api-client-python
 
-    # Create Python Virtual Environment and activate
-    python -m venv .venv
+    # Configure the environment variables. Copy example.env to .env and update the values
+    cp example.env .env
+
+    # load .env vars
+    # [ ! -f .env ] || export $(grep -v '^#' .env | xargs)
+    # or this version allows variable substitution and quoted long values
+    # [ -f .env ] && while IFS= read -r line; do [[ $line =~ ^[^#]*= ]] && eval "export $line"; done < .env
+
+    # Create and activate a python virtual environment
+    # Windows
+    # virtualenv \path\to\.venv -p path\to\specific_version_python.exe
+    # C:\Users\!Admin\AppData\Local\Programs\Python\Python310\python.exe -m venv .venv
+    # .venv\scripts\activate
+
+    # Linux
+    # virtualenv .venv /usr/local/bin/python3.10
+    # python3.10 -m venv .venv
+    # python3 -m venv .venv
+    python3 -m venv .venv
     source .venv/bin/activate
+
+    # Update pip
+    python -m pip install --upgrade pip
+
+    # Install dependencies
+    python -m pip install -r requirements_dev.txt
 
     # Install Project
     python -m pip install -r requirements_dev.txt
-    python -m pip install -e .
 
-    # Create git hook scripts
+    # Configure linting and formatting tools
     pre-commit install
+
+    # Install the package locally
+    pip install --editable .
 
 Style Guidelines
 ----------------

@@ -1,4 +1,5 @@
 """The tests for the Srp Energy API Time of Use cases."""
+
 from datetime import datetime
 from unittest.mock import patch
 
