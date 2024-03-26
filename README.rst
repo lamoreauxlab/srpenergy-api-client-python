@@ -128,7 +128,7 @@ This section will configure your computer to develop, test, and debug the projec
     source .venv/bin/activate
 
     # Install Project
-    python -m pip install -r requirements_test.txt
+    python -m pip install -r requirements_dev.txt
     python -m pip install -e .
 
     # Create git hook scripts
@@ -190,7 +190,7 @@ Install the test dependencies into your Python environment:
 
 .. code-block:: bash
 
-    pip3 install -r requirements_test.txt
+    pip3 install -r requirements_dev.txt
 
 Now that you have all test dependencies installed, you can run tests on the project:
 
