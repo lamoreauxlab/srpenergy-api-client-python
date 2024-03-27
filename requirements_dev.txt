@@ -1,7 +1,7 @@
 # Dev Requirements
 -r requirements.txt
 
-bandit==1.7.4
+bandit[toml]==1.7.4
 black==24.3.0
 codespell==2.2.6
 flake8==7.0.0
