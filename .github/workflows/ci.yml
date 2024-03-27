@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  CACHE_VERSION: 1
+  CACHE_VERSION: 2
   PRE_COMMIT_CACHE: ~/.cache/pre-commit
   PYTHON_VERSION: "3.10"
 
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
       - name: Generate partial pre-commit restore key
         id: generate_pre-commit_cache_key
         run: >-
@@ -36,16 +36,16 @@ jobs:
       - info
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.0.0
+        uses: actions/setup-python@v5.1.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.0.2
         with:
           path: venv
           key: >-
@@ -60,7 +60,7 @@ jobs:
           pip install -r requirements_dev.txt
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.0.2
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           lookup-only: true
@@ -81,16 +81,16 @@ jobs:
       - pre-commit
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v4.1.2
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.0.0
+        uses: actions/setup-python@v5.1.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v3.3.2
+        uses: actions/cache/restore@v4.0.2
         with:
           path: venv
           fail-on-cache-miss: true
@@ -99,7 +99,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v3.3.2
+        uses: actions/cache/restore@v4.0.2
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
@@ -142,6 +142,14 @@ jobs:
           pre-commit run --hook-stage manual flake8 --all-files --show-diff-on-failure
           pre-commit run --hook-stage manual bandit --all-files --show-diff-on-failure
           pre-commit run --hook-stage manual pylint --all-files --show-diff-on-failure
+
+      - name: Register hadolint problem matcher
+        run: |
+          echo "::add-matcher::.github/workflows/matchers/hadolint.json"
+      - name: Check Dockerfile
+        uses: docker://hadolint/hadolint:v1.18.2
+        with:
+          args: hadolint .devcontainer/Dockerfile
 
   pytest:
     runs-on: ubuntu-latest
