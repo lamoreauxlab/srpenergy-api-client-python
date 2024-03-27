@@ -15,19 +15,19 @@ BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
 
 def get_pretty_date(date_part):
-    r"""Return a formatted date from an iso date."""
+    """Return a formatted date from an iso date."""
     date = parse(date_part)
     return date.strftime("%m/%d/%Y")
 
 
 def get_pretty_time(date_part):
-    r"""Return a formatted time from an iso date."""
+    """Return a formatted time from an iso date."""
     date = parse(date_part)
     return date.strftime("%H:%M %p")
 
 
 def get_rate(str_usage_time):
-    r"""Return the time of use pricing for the given time.
+    """Return the time of use pricing for the given time.
 
     From the SRP website
     peak times:
@@ -113,7 +113,7 @@ def get_rate(str_usage_time):
 
 
 class SrpEnergyClient:
-    r"""SrpEnergyClient(accountid, username, password).
+    """SrpEnergyClient(accountid, username, password).
 
     Client used to fetch srp energy usage.
 
@@ -164,7 +164,7 @@ class SrpEnergyClient:
         self.password = password
 
     def validate(self):
-        r"""Validate user credentials.
+        """Validate user credentials.
 
         Returns
         -------
@@ -204,7 +204,7 @@ class SrpEnergyClient:
             return False
 
     def usage(self, startdate, enddate, is_tou=False):  # pylint: disable=R0914
-        r"""Get the energy usage for a given date range.
+        """Get the energy usage for a given date range.
 
         Parameters
         ----------

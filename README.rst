@@ -1,8 +1,9 @@
 **********************************
 Srp Energy Developer APIs - Python
 **********************************
-.. image:: https://coveralls.io/repos/github/lamoreauxlab/srpenergy-api-client-python/badge.svg?branch=master
-    :target: https://coveralls.io/github/lamoreauxlab/srpenergy-api-client-python?branch=master
+.. image:: https://coveralls.io/repos/github/lamoreauxlab/srpenergy-api-client-python/badge.svg?branch=main
+    :target: https://coveralls.io/github/lamoreauxlab/srpenergy-api-client-python?branch=main
+    :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/srpenergy-api-client-python/badge/?version=latest
     :target: https://srpenergy-api-client-python.readthedocs.io/en/latest/?badge=latest
@@ -221,7 +222,7 @@ As it states in the `Style Guidelines`_ section all code is checked to verify th
 
     # Run unit tests
     python -m pytest tests
-    python -m pytest --cov-report term-missing --cov=boilerplate tests/
+    python -m pytest --cov-report=xml --cov-report term-missing --cov=srpenergy tests/
 
 Building Docs
 -------------
