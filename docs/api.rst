@@ -60,19 +60,18 @@ str_enddate
 xsrf-token
     the xsrf-token used in the header
 
+.. code-block:: bash
 
+    api_endpoint="https://myaccount.srpnet.com/myaccountapi/api/usage/hourlydetail"
+    xsrf_token="your_xsrf_token_here"
+    str_startdate="start date"
+    str_enddate="end date"
 
-.. code-block::
+    # Example wget
+    wget --header="x-xsrf-token: $xsrf_token" "${api_endpoint}?billaccount=${code}&beginDate=${str_startdate}&endDate=${str_enddate}"
 
-    https://myaccount.srpnet.com/myaccountapi/api/usage/hourlydetail?billaccount="
-                    + <code>
-                    + "&beginDate="
-                    + <str_startdate>
-                    + "&endDate="
-                    + str_enddate,
-
-    # Headers
-    # "x-xsrf-token": xsrf_token_value
+    # Example curl
+    curl -X GET -H "x-xsrf-token: $xsrf_token" "$api_endpoint?billaccount=${code}&beginDate=${str_startdate}&endDate=${str_enddate}"
 
 Results
 -------

@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         gnupg \
         jq \
         lsb-release \
+        shellcheck \
         unzip \
         vim \
     && rm -rf /var/lib/apt/lists/*

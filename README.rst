@@ -122,7 +122,8 @@ If you want to develop outside of a docker devcontainer you can use the followin
 * Install Python
 * Configure linting and formatting tools
 
-.. code-block::bash
+.. code-block:: bash
+
     # Clone Project to local computer
     cd /path/to/src/
     git clone https://github.com/lamoreauxlab/srpenergy-api-client-python.git
@@ -136,18 +137,15 @@ If you want to develop outside of a docker devcontainer you can use the followin
     # or this version allows variable substitution and quoted long values
     # [ -f .env ] && while IFS= read -r line; do [[ $line =~ ^[^#]*= ]] && eval "export $line"; done < .env
 
-    # Create and activate a python virtual environment
+    # Linux
+    # virtualenv .venv /usr/local/bin/python3.10
+    python3 -m venv .venv
+    source .venv/bin/activate
+
     # Windows
     # virtualenv \path\to\.venv -p path\to\specific_version_python.exe
     # C:\Users\!Admin\AppData\Local\Programs\Python\Python310\python.exe -m venv .venv
     # .venv\scripts\activate
-
-    # Linux
-    # virtualenv .venv /usr/local/bin/python3.10
-    # python3.10 -m venv .venv
-    # python3 -m venv .venv
-    python3 -m venv .venv
-    source .venv/bin/activate
 
     # Update pip
     python -m pip install --upgrade pip
@@ -155,10 +153,9 @@ If you want to develop outside of a docker devcontainer you can use the followin
     # Install dependencies
     python -m pip install -r requirements_dev.txt
 
-    # Install Project
-    python -m pip install -r requirements_dev.txt
-
     # Configure linting and formatting tools
+    sudo apt-get update
+    sudo apt-get install -y shellcheck
     pre-commit install
 
     # Install the package locally
@@ -216,25 +213,22 @@ As it states in the `Style Guidelines`_ section all code is checked to verify th
 - All the unit tests pass
 - All code passes the checks from the linting tools
 
-Install the test dependencies into your Python environment:
-
 .. code-block:: bash
 
-    pip3 install -r requirements_dev.txt
+    # Use pre-commit scripts to run all linting
+    pre-commit run --all-files
 
-Now that you have all test dependencies installed, you can run tests on the project:
+    # Run a specific linter via pre-commit
+    pre-commit run --all-files codespell
 
-.. code-block:: bash
-
-    isort .
-    codespell  --skip="./.*,*.csv,*.json,*.pyc,./docs/_build/*,./htmlcov/*"
-    black setup.py srpenergy tests
-    flake8 setup.py srpenergy tests
-    pylint setup.py srpenergy tests
-    pydocstyle setup.py srpenergy tests
+    # Run linters outside of pre-commit
+    codespell .
+    shellcheck -x ./script/*.sh
     rstcheck README.rst
+
+    # Run unit tests
     python -m pytest tests
-    python -m pytest --cov-report term-missing --cov=srpenergy tests
+    python -m pytest --cov-report term-missing --cov=boilerplate tests/
 
 Building Docs
 -------------
@@ -244,7 +238,7 @@ Build the documentation locally with
 .. code-block:: bash
 
     cd docs
-    python -m sphinx -T -b html -d _build/doctrees -D language=en . _build/html
+    sphinx-build -T -b html -d _build/doctrees -D language=en . _build/html
 
 Run Git Pre-commit
 ------------------

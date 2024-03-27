@@ -54,3 +54,22 @@ repos:
         - id: fix-byte-order-marker
         - id: mixed-line-ending
         - id: trailing-whitespace
+    - repo: local
+      hooks:
+        - id: shellcheck
+          name: shellcheck
+          entry: script/pre_commit_shellcheck.sh
+          language: script
+          exclude_types: [json, sql, toml, yaml]
+          files: ^(script|iac)/.+sh$
+        - id: rstcheck
+          name: rstcheck
+          entry: script/pre_commit_rstcheck.sh
+          language: script
+          files: ^.+rst$
+        - id: pylint
+          name: pylint
+          entry: script/run_in_env.sh pylint -j 0
+          language: script
+          types: [python]
+          files: ^functions/.+\.py$
