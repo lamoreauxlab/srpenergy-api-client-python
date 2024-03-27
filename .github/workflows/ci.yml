@@ -176,3 +176,49 @@ jobs:
             -o console_output_style=count \
             -p no:sugar \
             tests
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    needs:
+      - linting
+    steps:
+      - name: Check out code from github
+        uses: actions/checkout@v4.1.2
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        id: python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          check-latest: true
+      - name: Restore base Python virtual environment
+        id: cache-venv
+        uses: actions/cache/restore@v4.0.2
+        with:
+          path: venv
+          fail-on-cache-miss: true
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-venv-${{
+              needs.info.outputs.pre-commit_cache_key }}
+      - name: Restore pre-commit environment from cache
+        id: cache-precommit
+        uses: actions/cache/restore@v4.0.2
+        with:
+          path: ${{ env.PRE_COMMIT_CACHE }}
+          fail-on-cache-miss: true
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+              needs.info.outputs.pre-commit_cache_key }}
+
+      - name: Test Coverage
+        run: |
+          . venv/bin/activate
+          python -m pytest --cov=srpenergy --cov-report=xml  \
+            -o console_output_style=count \
+            -p no:sugar \
+            tests
+      - name: Report Coverage
+        if: startsWith(runner.os, 'Linux')
+        run: curl -sL https://coveralls.io/coveralls-linux.tar.gz | tar -xz && ./coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

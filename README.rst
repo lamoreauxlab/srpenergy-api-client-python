@@ -8,10 +8,6 @@ Srp Energy Developer APIs - Python
     :target: https://srpenergy-api-client-python.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://requires.io/github/lamoreauxlab/srpenergy-api-client-python/requirements.svg?branch=master
-    :target: https://requires.io/github/lamoreauxlab/srpenergy-api-client-python/requirements/?branch=master
-    :alt: Requirements Status
-
 .. image:: https://badge.fury.io/py/srpenergy.svg
     :target: https://badge.fury.io/py/srpenergy
     :alt: Latest version on PyPi
@@ -295,8 +291,8 @@ Upgrade to the latest version of setuptools and create package and test
 
 .. code-block:: bash
 
-    python -m pip install --user --upgrade setuptools wheel # Get latest version
-    python setup.py sdist bdist_wheel
+    python -m pip install --upgrade build twine
+    python -m build
     twine check dist/*
 
 Upload the package to test first
