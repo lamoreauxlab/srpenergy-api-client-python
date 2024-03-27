@@ -11,6 +11,11 @@
 set -e
 
 printf 'Running %s with args %s\n' "$0" "$*"
+
+which python
+which pip
+pip freeze
+
 for i do
     if ! bandit --quiet --format=custom --configfile pyproject.toml "$i"; then
         echo "bandit failed."
