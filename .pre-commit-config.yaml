@@ -1,4 +1,14 @@
 repos:
+    - repo: 'https://github.com/codespell-project/codespell'
+      rev: v2.2.6
+      hooks:
+        - id: codespell
+          additional_dependencies:
+            - tomli
+    - repo: https://github.com/pycqa/isort
+      rev: 5.13.2
+      hooks:
+        - id: isort
     - repo: 'https://github.com/psf/black'
       rev: 24.3.0
       hooks:
@@ -6,16 +16,6 @@ repos:
           args:
             - '--safe'
             - '--quiet'
-    - repo: 'https://github.com/codespell-project/codespell'
-      rev: v2.2.6
-      hooks:
-        - id: codespell
-          args:
-            - '--skip="./.*,./.pyc,./docs/_build/*,./htmlcov/*"'
-            - '--quiet-level=2'
-          exclude_types:
-            - csv
-            - json
     - repo: 'https://github.com/pycqa/flake8'
       rev: 7.0.0
       hooks:
@@ -23,7 +23,7 @@ repos:
           additional_dependencies:
             - flake8-docstrings==1.6.0
             - pydocstyle==6.3.0
-          files: ^setup.py|(srpenergy|tests)\/.+\.py$
+          files: ^(srpenergy|tests)\/.+\.py$
     - repo: 'https://github.com/PyCQA/bandit'
       rev: 1.7.4
       hooks:
@@ -31,17 +31,7 @@ repos:
           args:
             - '--quiet'
             - '--format=custom'
-            - '--configfile=tests/bandit.yaml'
           files: ^(srpenergy|tests)/.+\.py$
-    - repo: https://github.com/pycqa/isort
-      rev: 5.13.2
-      hooks:
-        - id: isort
-    # - repo: 'https://github.com/myint/rstcheck'
-    #   rev: 3f929574
-    #   hooks:
-    #     - id: rstcheck
-    #       exclude: 'docs/module.rst'
     - repo: 'https://github.com/pre-commit/pre-commit-hooks'
       rev: v4.1.0
       hooks:
@@ -72,4 +62,4 @@ repos:
           entry: script/run_in_env.sh pylint -j 0
           language: script
           types: [python]
-          files: ^functions/.+\.py$
+          files: ^(srpenergy|tests)/.+\.py$

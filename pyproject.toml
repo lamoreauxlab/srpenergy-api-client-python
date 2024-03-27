@@ -35,10 +35,10 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["srpenergy*"]
 
-[tool.bandit]
-exclude = [".venv/*.*"]
-exclude_dirs = [".venv"]
-tests = ["B108", "B306", "B307", "B313", "B314", "B315", "B316", "B317", "B318", "B319", "B320", "B325", "B602", "B604"]
+[tool.codespell]
+skip = './.*,./.pyc,./docs/_build/*,./htmlcov/*'
+count = true
+quiet-level = 2
 
 [tool.isort]
 profile = "black"
@@ -48,8 +48,23 @@ known_first_party = "srpenergy,tests"
 forced_separate = "tests"
 combine_as_imports = true
 
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+exclude = [".venv/*.*"]
+exclude_dirs = [".venv"]
+tests = ["B108", "B306", "B307", "B313", "B314", "B315", "B316", "B317", "B318", "B319", "B320", "B325", "B602", "B604"]
+[tool.bandit.assert_used]
+skips = ['*_test.py', '*/test_*.py']
+
+# Used with flake8
 [tool.pydocstyle]
 match-dir='[^node_module].*'
+
+[tool.rstcheck]
+# report = "WARNING"
+report_level = "INFO"
+ignore = "docs/module.rst"
+ignore_directives = ["automodule"]
 
 [tool.pylint.MAIN]
 py-version = "3.10"
@@ -65,10 +80,3 @@ fail-on = [
 
 [tool.pylint.FORMAT]
 expected-line-ending-format = "LF"
-
-[tool.rstcheck]
-# report_level = "INFO"
-# report_level = "WARNING"
-report = "INFO"
-ignore = "docs/module.rst"
-ignore_directives = ["automodule"]

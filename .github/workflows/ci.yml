@@ -3,134 +3,150 @@ name: CI
 on: [push]
 
 env:
-  DEFAULT_PYTHON: 3.9
+  CACHE_VERSION: 1
+  PRE_COMMIT_CACHE: ~/.cache/pre-commit
+  PYTHON_VERSION: "3.10"
 
 jobs:
-  lint-black:
-    name: Check black
-    runs-on: ubuntu-latest
+  info:
+    name: Collect information & changes data
+    outputs:
+      pre-commit_cache_key: ${{ steps.generate_pre-commit_cache_key.outputs.key }}
+      python_chache_key: ${{ steps.generate_python_cache_key.outputs.key }}
+    runs-on: ubuntu-22.04
     steps:
-      - name: Check out code from github
-        uses: actions/checkout@v2
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v2
+      - name: Check out code from GitHub
+        uses: actions/checkout@v4.1.1
+      - name: Generate partial pre-commit restore key
+        id: generate_pre-commit_cache_key
+        run: >-
+          echo "key=pre-commit-${{ env.CACHE_VERSION }}-${{
+            hashFiles('.pre-commit-config.yaml') }}"  >> $GITHUB_OUTPUT
+      - name: Generate partial Python venv restore key
+        id: generate_python_cache_key
+        run: >-
+          echo "key=venv-${{ env.CACHE_VERSION }}-${{
+            hashFiles('requirements.txt') }}-${{
+            hashFiles('requirements_dev.txt') }}" >> $GITHUB_OUTPUT
+
+  pre-commit:
+    name: Prepare pre-commit base
+    runs-on: ubuntu-22.04
+    needs:
+      - info
+    steps:
+      - name: Check out code from GitHub
+        uses: actions/checkout@v4.1.1
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
+        uses: actions/setup-python@v5.0.0
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install dependencies
+          python-version: ${{ env.PYTHON_VERSION }}
+          check-latest: true
+      - name: Restore base Python virtual environment
+        id: cache-venv
+        uses: actions/cache@v3.3.2
+        with:
+          path: venv
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-venv-${{
+              needs.info.outputs.pre-commit_cache_key }}
+      - name: Create Python virtual environment
+        if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          python -m pip install --upgrade pip
+          python -m venv venv
+          . venv/bin/activate
+          python --version
           pip install -r requirements_dev.txt
-      - name: Install pre-commit
-        run : |
-            pre-commit install
-      - name: Run black
-        run: |
-          pre-commit run --hook-stage manual black --all-files --show-diff-on-failure
-
-  lint-flake8:
-    name: Check flake8
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code from github
-        uses: actions/checkout@v2
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v2
-        id: python
+      - name: Restore pre-commit environment from cache
+        id: cache-precommit
+        uses: actions/cache@v3.3.2
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install dependencies
+          path: ${{ env.PRE_COMMIT_CACHE }}
+          lookup-only: true
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+              needs.info.outputs.pre-commit_cache_key }}
+      - name: Install pre-commit dependencies
+        if: steps.cache-precommit.outputs.cache-hit != 'true'
         run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements_dev.txt
-      - name: Install pre-commit
-        run : |
-            pre-commit install
-      - name: Run flake8
-        run: |
-          pre-commit run --hook-stage manual flake8 --all-files
+          . venv/bin/activate
+          pre-commit install-hooks
 
-  lint-isort:
-    name: Check isort
-    runs-on: ubuntu-latest
+  linting:
+    name: Run linting
+    runs-on: ubuntu-22.04
+    needs:
+      - info
+      - pre-commit
     steps:
-      - name: Check out code from github
-        uses: actions/checkout@v2
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v2
+      - name: Check out code from GitHub
+        uses: actions/checkout@v4.1.1
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
+        uses: actions/setup-python@v5.0.0
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install dependencies
-        run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements_dev.txt
-      - name: Run flake8
-        run: |
-          isort setup.py srpenergy tests
+          python-version: ${{ env.PYTHON_VERSION }}
+          check-latest: true
+      - name: Restore base Python virtual environment
+        id: cache-venv
+        uses: actions/cache/restore@v3.3.2
+        with:
+          path: venv
+          fail-on-cache-miss: true
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-venv-${{
+              needs.info.outputs.pre-commit_cache_key }}
+      - name: Restore pre-commit environment from cache
+        id: cache-precommit
+        uses: actions/cache/restore@v3.3.2
+        with:
+          path: ${{ env.PRE_COMMIT_CACHE }}
+          fail-on-cache-miss: true
+          key: >-
+            ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+              needs.info.outputs.pre-commit_cache_key }}
 
-  lint-other:
-    name: Check other linters
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code from github
-        uses: actions/checkout@v2
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v2
-        id: python
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install dependencies
-        run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements_dev.txt
-      - name: Install pre-commit
-        run : |
-            pre-commit install
-      - name: Run check-yaml
-        run: |
-          pre-commit run --hook-stage commit check-yaml --all-files --show-diff-on-failure
       - name: Run codespell
         run: |
-          pre-commit run --hook-stage commit codespell --all-files --show-diff-on-failure
-      - name: Run bandit
+          . venv/bin/activate
+          pre-commit run --hook-stage manual codespell --all-files --show-diff-on-failure
+
+      - name: Run check-toml
         run: |
-          pre-commit run --hook-stage commit bandit --all-files --show-diff-on-failure
-      - name: Run end-of-file-fixer
+          . venv/bin/activate
+          pre-commit run --hook-stage manual check-toml --all-files --show-diff-on-failure
+
+      - name: Run check-yaml
         run: |
-          pre-commit run --hook-stage commit end-of-file-fixer --all-files --show-diff-on-failure
-      - name: Run trailing-whitespace
+          . venv/bin/activate
+          pre-commit run --hook-stage manual check-yaml --all-files --show-diff-on-failure
+
+      - name: Run shellcheck
         run: |
-          pre-commit run --hook-stage commit trailing-whitespace --all-files --show-diff-on-failure
+          . venv/bin/activate
+          pre-commit run --hook-stage manual shellcheck --all-files --show-diff-on-failure
+
       - name: Run rstcheck
         run: |
-          pre-commit run --hook-stage commit rstcheck --all-files --show-diff-on-failure
+          . venv/bin/activate
+          pre-commit run --hook-stage manual rstcheck --all-files --show-diff-on-failure
 
-  pylint:
-    name: Check pylint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code from github
-        uses: actions/checkout@v2
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-        uses: actions/setup-python@v2
-        id: python
-        with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Install dependencies
+      - name: Python Lint
+        id: python-lint
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements_dev.txt
-      - name: Analysing the code with pylint
-        run: |
-          pylint setup.py srpenergy tests
+          . venv/bin/activate
+
+          pre-commit run --hook-stage manual isort --all-files --show-diff-on-failure
+          pre-commit run --hook-stage manual black --all-files --show-diff-on-failure
+          pre-commit run --hook-stage manual flake8 --all-files --show-diff-on-failure
+          pre-commit run --hook-stage manual bandit --all-files --show-diff-on-failure
+          pre-commit run --hook-stage manual pylint --all-files --show-diff-on-failure
 
   pytest:
     runs-on: ubuntu-latest
     needs:
-      - lint-black
-      - lint-other
-      - lint-isort
+      - linting
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
