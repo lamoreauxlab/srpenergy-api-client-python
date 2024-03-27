@@ -24,15 +24,6 @@ repos:
             - flake8-docstrings==1.6.0
             - pydocstyle==6.3.0
           files: ^(srpenergy|tests)\/.+\.py$
-    - repo: 'https://github.com/PyCQA/bandit'
-      rev: 1.7.4
-      hooks:
-        - id: bandit
-          args:
-            - '--quiet'
-            - '--format=custom'
-            - '--configfile pyproject.toml'
-          files: ^(srpenergy|tests)/.+\.py$
     - repo: 'https://github.com/pre-commit/pre-commit-hooks'
       rev: v4.1.0
       hooks:
@@ -58,6 +49,12 @@ repos:
           entry: script/pre_commit_rstcheck.sh
           language: script
           files: ^.+rst$
+        - id: bandit
+          name: bandit
+          entry: script/pre_commit_bandit.sh
+          language: script
+          types: [python]
+          files: ^(srpenergy|tests)/.+\.py$
         - id: pylint
           name: pylint
           entry: script/run_in_env.sh pylint -j 0
