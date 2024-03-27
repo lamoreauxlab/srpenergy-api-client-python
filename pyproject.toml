@@ -52,7 +52,8 @@ combine_as_imports = true
 [tool.bandit]
 exclude = [".venv/*.*"]
 exclude_dirs = [".venv"]
-tests = ["B108", "B306", "B307", "B313", "B314", "B315", "B316", "B317", "B318", "B319", "B320", "B325", "B602", "B604"]
+tests = ["B101", "B108", "B306", "B307", "B313", "B314", "B315", "B316", "B317", "B318", "B319", "B320", "B602", "B604"]
+
 [tool.bandit.assert_used]
 skips = ['*_test.py', '*/test_*.py']
 
