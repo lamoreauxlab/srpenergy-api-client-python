@@ -232,7 +232,7 @@ Build the documentation locally with
 .. code-block:: bash
 
     cd docs
-    sphinx-build -T -b html -d _build/doctrees -D language=en . _build/html
+    python -m sphinx -T -b html -d _build/doctrees -D language=en . _build/html
 
 Run Git Pre-commit
 ------------------
