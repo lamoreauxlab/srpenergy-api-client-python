@@ -265,6 +265,7 @@ Change the version in the following files:
 
 - srpenergy/__init__.py
 - docs/conf.py
+- pyproject.toml
 
 Tag Version
 ^^^^^^^^^^^

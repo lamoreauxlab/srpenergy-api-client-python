@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name        = "srpenergy"
-version     = "1.3.6"
+version     = "1.3.7"
 license     = {text = "MIT"}
 description = "An unofficial Python module for interacting with Srp Energy data."
 readme      = "README.rst"
