@@ -2,8 +2,7 @@
 
 from unittest.mock import Mock
 
-PATCH_GET = "srpenergy.client.requests.Session.get"
-PATCH_POST = "srpenergy.client.requests.Session.post"
+PATCH_SESSION = "srpenergy.client.curl_cffi.Session"
 
 TEST_USER_NAME = "abba"
 TEST_PASSWORD = "dabba"
@@ -28,12 +27,15 @@ MOCK_ANTI_FORGERY_RESPONSE_COOKIES = {
 class MockResponse:
     """Mock Response."""
 
-    def __init__(self, json_data, status_code, cookies, kwargs):
+    def __init__(
+        self, json_data, status_code, cookies, kwargs, ok=True
+    ):  # pylint: disable=R0913
         """Create Mock Response."""
         self.json_data = json_data
         self.status_code = status_code
         self.cookies = cookies
         self.kwargs = kwargs
+        self.ok = ok
 
     def json(self):
         """Return mock json."""

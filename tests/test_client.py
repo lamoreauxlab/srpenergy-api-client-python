@@ -9,8 +9,7 @@ from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
     MOCK_LOGIN_RESPONSE,
-    PATCH_GET,
-    PATCH_POST,
+    PATCH_SESSION,
     TEST_PASSWORD,
     TEST_USER_NAME,
     get_mock_requests,
@@ -179,10 +178,11 @@ def test_bad_parameter_account_id_hyphens():
 
 def test_bad_parameter_start_date_string():
     """Test start date is date."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -194,10 +194,11 @@ def test_bad_parameter_start_date_string():
 
 def test_bad_parameter_end_date_string():
     """Test end date is date."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -209,10 +210,11 @@ def test_bad_parameter_end_date_string():
 
 def test_bad_parameter_start_date_after_now():
     """Test start date is not after Now."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -225,10 +227,11 @@ def test_bad_parameter_start_date_after_now():
 
 def test_bad_parameter_start_date_after_end_date():
     """Test start date is not after end date."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -241,10 +244,11 @@ def test_bad_parameter_start_date_after_end_date():
 
 def test_get_usage():
     """Test usage."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -258,10 +262,11 @@ def test_get_usage():
 
 def test_single_day_usage_kw():
     """Test Single Day Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -280,10 +285,11 @@ def test_single_day_usage_kw():
 
 def test_latest_day_usage_kw():
     """Test Latest Day Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -302,10 +308,11 @@ def test_latest_day_usage_kw():
 
 def test_latest_day_usage_kw_no_total():
     """Test Latest Day Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES_NO_TOTAL)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES_NO_TOTAL)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -324,10 +331,11 @@ def test_latest_day_usage_kw_no_total():
 
 def test_validate_user():
     """Test Validation of user."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -338,10 +346,11 @@ def test_validate_user():
 
 def test_error_validate_user():
     """Test error Validation of user."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_BAD_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_BAD_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -352,10 +361,11 @@ def test_error_validate_user():
 
 def test_error_usage_payload():
     """Test error with invalid usage payload."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_BAD_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -368,10 +378,11 @@ def test_error_usage_payload():
 
 def test_date_timezone_error():
     """Test error with invalid usage payload."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
 

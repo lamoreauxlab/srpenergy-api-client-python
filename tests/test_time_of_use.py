@@ -7,8 +7,7 @@ from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
     MOCK_LOGIN_RESPONSE,
-    PATCH_GET,
-    PATCH_POST,
+    PATCH_SESSION,
     TEST_PASSWORD,
     TEST_USER_NAME,
     get_mock_requests,
@@ -659,10 +658,11 @@ ROUTES = [
 
 def test_time_of_use_summer_off_peak_usage():
     """Test Time of Use for summer Off Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -681,10 +681,11 @@ def test_time_of_use_summer_off_peak_usage():
 
 def test_time_of_use_summer_on_peak_usage():
     """Test Time of Use for summer on Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -703,10 +704,11 @@ def test_time_of_use_summer_on_peak_usage():
 
 def test_time_of_use_peak_summer_off_peak_usage():
     """Test Time of Use for peak summer Off Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -725,10 +727,11 @@ def test_time_of_use_peak_summer_off_peak_usage():
 
 def test_time_of_use_peak_summer_on_peak_usage():
     """Test Time of Use for peak summer on Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -747,10 +750,11 @@ def test_time_of_use_peak_summer_on_peak_usage():
 
 def test_time_of_use_winter_off_peak_usage():
     """Test Time of Use for winter Off Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -769,10 +773,11 @@ def test_time_of_use_winter_off_peak_usage():
 
 def test_time_of_use_winter_on_peak_usage():
     """Test Time of Use for winter on Peak Usage for kwh."""
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 
@@ -808,10 +813,11 @@ def test_daily_aggregation_tou():
     #             "dailyCost": 14.84
     #         }
 
-    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+    with patch(PATCH_SESSION) as mock_session_cls:
 
-        session_post.return_value = MOCK_LOGIN_RESPONSE
-        session_get.side_effect = get_mock_requests(ROUTES)
+        mock_session = mock_session_cls.return_value.__enter__.return_value
+        mock_session.post.return_value = MOCK_LOGIN_RESPONSE
+        mock_session.get.side_effect = get_mock_requests(ROUTES)
 
         client = SrpEnergyClient(TEST_ACCOUNT_TOU_ID, TEST_USER_NAME, TEST_PASSWORD)
 

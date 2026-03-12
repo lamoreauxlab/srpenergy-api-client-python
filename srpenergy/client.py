@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 import re
 from urllib.parse import unquote
 
+import curl_cffi
 from dateutil.parser import parse
-import requests
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
@@ -163,6 +163,20 @@ class SrpEnergyClient:
         self.username = username
         self.password = password
 
+    def _login(self, session):
+        """Login to the SRP website."""
+        response = session.post(
+            BASE_USAGE_URL + "login/authorize",
+            data={"username": self.username, "password": self.password},
+            headers={"Accept": "*/*"},
+        )
+        if not response.ok:
+            raise ValueError("SRP Login failed and may have been blocked.")
+
+        data = response.json()
+
+        return data["message"] == "Log in successful."
+
     def validate(self):
         """Validate user credentials.
 
@@ -188,17 +202,8 @@ class SrpEnergyClient:
         """
         try:
 
-            with requests.Session() as session:
-
-                response = session.post(
-                    BASE_USAGE_URL + "/login/authorize",
-                    data={"username": self.username, "password": self.password},
-                )
-                data = response.json()
-
-                valid = data["message"] == "Log in successful."
-
-                return valid
+            with curl_cffi.Session(impersonate="chrome") as session:
+                return self._login(session)
 
         except Exception:  # pylint: disable=W0703
             return False
@@ -272,12 +277,10 @@ class SrpEnergyClient:
             str_startdate = startdate.strftime("%m-%d-%Y")
             str_enddate = enddate.strftime("%m-%d-%Y")
 
-            with requests.Session() as session:
+            with curl_cffi.Session(impersonate="chrome") as session:
 
-                response = session.post(
-                    BASE_USAGE_URL + "login/authorize",
-                    data={"username": self.username, "password": self.password},
-                )
+                if not self._login(session):
+                    raise ValueError("SRP Login failed.")
 
                 response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
                 xsrf_token = unquote(response.cookies["xsrf-token"])

@@ -1,2 +1,2 @@
 python-dateutil>=2.8.0
-requests>=2.22.0
+curl_cffi>=0.14.0
