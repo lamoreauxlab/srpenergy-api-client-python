@@ -6,6 +6,12 @@ from unittest.mock import patch
 from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
+    EXPECTED_PEAK_SUMMER_OFF_PEAK,
+    EXPECTED_PEAK_SUMMER_ON_PEAK,
+    EXPECTED_SUMMER_OFF_PEAK_RATE,
+    EXPECTED_SUMMER_ON_PEAK_RATE,
+    EXPECTED_WINTER_OFF_PEAK_RATE,
+    EXPECTED_WINTER_ON_PEAK_RATE,
     MOCK_LOGIN_RESPONSE,
     PATCH_GET,
     PATCH_POST,
@@ -656,11 +662,57 @@ ROUTES = [
     ("06-28-2020", MOCK_USAGE_TOU_GENERAL_RESPONSE),
 ]
 
+# Expected Values
+EXPECTED_SUMMER_OFF_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_SUMMER_OFF_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_SUMMER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakKwh"]
+
+EXPECTED_SUMMER_ON_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_SUMMER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakKwh"]
+
+EXPECTED_PEAK_SUMMER_OFF_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakKwh"]
+
+EXPECTED_PEAK_SUMMER_ON_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakKwh"]
+
+EXPECTED_WINTER_OFF_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_WINTER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakKwh"]
+
+EXPECTED_WINTER_ON_PEAK_USAGE_COUNT = len(
+    MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE["hourlyUsageList"]
+)
+EXPECTED_WINTER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakKwh"]
+
+EXPECTED_DAILY_USAGE_COUNT = len(MOCK_USAGE_TOU_GENERAL_RESPONSE["hourlyUsageList"])
+EXPECTED_DAILY_TOTAL_KWH = 123
+EXPECTED_DIALY_TOTAL_COST = 8.92
+
 
 def test_time_of_use_summer_off_peak_usage():
     """Test Time of Use for summer Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -671,18 +723,19 @@ def test_time_of_use_summer_off_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_SUMMER_OFF_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 6.1
-        assert cost == 0.44
+        assert kwh == EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH * EXPECTED_SUMMER_OFF_PEAK_RATE, 2
+        )
 
 
 def test_time_of_use_summer_on_peak_usage():
     """Test Time of Use for summer on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -693,18 +746,19 @@ def test_time_of_use_summer_on_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_SUMMER_ON_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 6.5
-        assert cost == 1.36
+        assert kwh == EXPECTED_SUMMER_ON_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_SUMMER_ON_PEAK_FIRST_KWH * EXPECTED_SUMMER_ON_PEAK_RATE, 2
+        )
 
 
 def test_time_of_use_peak_summer_off_peak_usage():
     """Test Time of Use for peak summer Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -715,18 +769,19 @@ def test_time_of_use_peak_summer_off_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_PEAK_SUMMER_OFF_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 7.1
-        assert cost == 0.52
+        assert kwh == EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH * EXPECTED_PEAK_SUMMER_OFF_PEAK, 2
+        )
 
 
 def test_time_of_use_peak_summer_on_peak_usage():
     """Test Time of Use for peak summer on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -737,18 +792,19 @@ def test_time_of_use_peak_summer_on_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_PEAK_SUMMER_ON_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 7.5
-        assert cost == 1.81
+        assert kwh == EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH * EXPECTED_PEAK_SUMMER_ON_PEAK, 2
+        )
 
 
 def test_time_of_use_winter_off_peak_usage():
     """Test Time of Use for winter Off Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -759,18 +815,19 @@ def test_time_of_use_winter_off_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_WINTER_OFF_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 2.1
-        assert cost == 0.15
+        assert kwh == EXPECTED_WINTER_OFF_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_WINTER_OFF_PEAK_FIRST_KWH * EXPECTED_WINTER_OFF_PEAK_RATE, 2
+        )
 
 
 def test_time_of_use_winter_on_peak_usage():
     """Test Time of Use for winter on Peak Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -781,12 +838,14 @@ def test_time_of_use_winter_on_peak_usage():
 
         usage = client.usage(start_date, end_date, True)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_WINTER_ON_PEAK_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 2.5
-        assert cost == 0.24
+        assert kwh == EXPECTED_WINTER_ON_PEAK_FIRST_KWH
+        assert cost == round(
+            EXPECTED_WINTER_ON_PEAK_FIRST_KWH * EXPECTED_WINTER_ON_PEAK_RATE, 2
+        )
 
 
 def test_daily_aggregation_tou():
@@ -809,7 +868,6 @@ def test_daily_aggregation_tou():
     #         }
 
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -827,6 +885,6 @@ def test_daily_aggregation_tou():
             total_kwh = total_kwh + kwh
             total_cost = total_cost + cost
 
-        assert len(usage) == 24
-        assert total_kwh == 123
-        assert total_cost == 8.92
+        assert len(usage) == EXPECTED_DAILY_USAGE_COUNT
+        assert total_kwh == EXPECTED_DAILY_TOTAL_KWH
+        assert total_cost == EXPECTED_DIALY_TOTAL_COST

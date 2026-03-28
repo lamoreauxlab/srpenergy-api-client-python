@@ -160,7 +160,7 @@ Style Guidelines
 
 This project enforces quite strict `PEP8 <https://www.python.org/dev/peps/pep-0008/>`_ and `PEP257 (Docstring Conventions) <https://www.python.org/dev/peps/pep-0257/>`_ compliance on all code submitted.
 
-We use `Black <https://github.com/psf/black>`_ for uncompromised code formatting.
+We use `Ruff <https://github.com/astral-sh/ruff>`_ for linting and uncompromised code formatting.
 
 Summary of the most relevant points:
 

@@ -6,7 +6,7 @@ PATCH_GET = "srpenergy.client.requests.Session.get"
 PATCH_POST = "srpenergy.client.requests.Session.post"
 
 TEST_USER_NAME = "abba"
-TEST_PASSWORD = "dabba"
+TEST_PASSWORD = "dabba"  # noqa: S105
 
 MOCK_LOGIN_RESPONSE = Mock()
 MOCK_LOGIN_RESPONSE.json.return_value = {
@@ -22,6 +22,16 @@ MOCK_ANTI_FORGERY_RESPONSE = {"message": "Success"}
 MOCK_ANTI_FORGERY_RESPONSE_COOKIES = {
     "xsrf-token": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2%7C207f"
 }
+
+EXPECTED_WINTER_OFF_PEAK_RATE = 0.0691
+EXPECTED_WINTER_ON_PEAK_RATE = 0.0951
+EXPECTED_SUMMER_OFF_PEAK_RATE = 0.0727
+EXPECTED_SUMMER_ON_PEAK_RATE = 0.2094
+EXPECTED_PEAK_SUMMER_OFF_PEAK = 0.073
+EXPECTED_PEAK_SUMMER_ON_PEAK = 0.2409
+EXPECTED_WINTER_WEEKEND_RATE = 0.0691
+EXPECTED_SUMMER_WEEKEND_RATE = 0.0727
+EXPECTED_PEAK_SUMMER_WEEKEND_RATE = 0.073
 
 
 # pylint: disable=R0903
@@ -43,7 +53,6 @@ class MockResponse:
 def get_mock_requests(routes):
     """Return a function that can be mocked for the given routes."""
 
-    # noqa: D202
     def mocked_requests_get(*args, **kwargs):
 
         if "login/antiforgerytoken" in args[0]:

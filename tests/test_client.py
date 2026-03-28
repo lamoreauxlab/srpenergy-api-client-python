@@ -132,6 +132,12 @@ ROUTES_NO_TOTAL = [
     ("usage/hourlydetail", MOCK_USAGE_RESPONSE_NO_TOTAL),
 ]
 
+# Expected Values
+EXPECTED_USAGE_COUNT = len(MOCK_USAGE_RESPONSE["hourlyUsageList"])
+EXPECTED_FIRST_USAGE = MOCK_USAGE_RESPONSE["hourlyUsageList"][0]
+EXPECTED_FIRST_KWH = EXPECTED_FIRST_USAGE["totalKwh"]
+EXPECTED_FIRST_COST = EXPECTED_FIRST_USAGE["totalCost"]
+
 
 def test_none_accountid():
     """Test No account parameter exception."""
@@ -180,7 +186,6 @@ def test_bad_parameter_account_id_hyphens():
 def test_bad_parameter_start_date_string():
     """Test start date is date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -195,7 +200,6 @@ def test_bad_parameter_start_date_string():
 def test_bad_parameter_end_date_string():
     """Test end date is date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -210,7 +214,6 @@ def test_bad_parameter_end_date_string():
 def test_bad_parameter_start_date_after_now():
     """Test start date is not after Now."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -226,7 +229,6 @@ def test_bad_parameter_start_date_after_now():
 def test_bad_parameter_start_date_after_end_date():
     """Test start date is not after end date."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -242,7 +244,6 @@ def test_bad_parameter_start_date_after_end_date():
 def test_get_usage():
     """Test usage."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -253,13 +254,12 @@ def test_get_usage():
 
         usage = client.usage(start_date, end_date)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_USAGE_COUNT
 
 
 def test_single_day_usage_kw():
     """Test Single Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -270,18 +270,17 @@ def test_single_day_usage_kw():
 
         usage = client.usage(start_date, end_date)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[0]
 
-        assert kwh == 0.4
-        assert cost == 0.08
+        assert kwh == EXPECTED_FIRST_KWH
+        assert cost == EXPECTED_FIRST_COST
 
 
 def test_latest_day_usage_kw():
     """Test Latest Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -292,18 +291,17 @@ def test_latest_day_usage_kw():
 
         usage = client.usage(start_date, end_date)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[-1]
 
-        assert kwh == 0.4
-        assert cost == 0.08
+        assert kwh == EXPECTED_FIRST_KWH
+        assert cost == EXPECTED_FIRST_COST
 
 
 def test_latest_day_usage_kw_no_total():
     """Test Latest Day Usage for kwh."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES_NO_TOTAL)
 
@@ -314,18 +312,17 @@ def test_latest_day_usage_kw_no_total():
 
         usage = client.usage(start_date, end_date)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[-1]
 
-        assert kwh == 0.4
-        assert cost == 0.08
+        assert kwh == EXPECTED_FIRST_KWH
+        assert cost == EXPECTED_FIRST_COST
 
 
 def test_validate_user():
     """Test Validation of user."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -339,7 +336,6 @@ def test_validate_user():
 def test_error_validate_user():
     """Test error Validation of user."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_BAD_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -353,7 +349,6 @@ def test_error_validate_user():
 def test_error_usage_payload():
     """Test error with invalid usage payload."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -362,14 +357,13 @@ def test_error_usage_payload():
         start_date = datetime(2018, 9, 19, 0, 0, 0)
         end_date = datetime(2018, 9, 19, 23, 0, 0)
 
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017
             client.usage(start_date, end_date)
 
 
 def test_date_timezone_error():
     """Test error with invalid usage payload."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
-
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES)
 
@@ -380,9 +374,9 @@ def test_date_timezone_error():
 
         usage = client.usage(start_date, end_date)
 
-        assert len(usage) == 3
+        assert len(usage) == EXPECTED_USAGE_COUNT
 
         _date, _hour, _isodate, kwh, cost = usage[-1]
 
-        assert kwh == 0.4
-        assert cost == 0.08
+        assert kwh == EXPECTED_FIRST_KWH
+        assert cost == EXPECTED_FIRST_COST

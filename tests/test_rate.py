@@ -4,13 +4,25 @@ import pytest
 
 from srpenergy.client import get_rate
 
+from tests.common import (
+    EXPECTED_PEAK_SUMMER_OFF_PEAK,
+    EXPECTED_PEAK_SUMMER_ON_PEAK,
+    EXPECTED_PEAK_SUMMER_WEEKEND_RATE,
+    EXPECTED_SUMMER_OFF_PEAK_RATE,
+    EXPECTED_SUMMER_ON_PEAK_RATE,
+    EXPECTED_SUMMER_WEEKEND_RATE,
+    EXPECTED_WINTER_OFF_PEAK_RATE,
+    EXPECTED_WINTER_ON_PEAK_RATE,
+    EXPECTED_WINTER_WEEKEND_RATE,
+)
+
 
 def test_winter_off_peak():
     """Test Winter off peak price."""
     usage_time = "2020-01-24T01:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0691
+    assert rate == EXPECTED_WINTER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -19,7 +31,7 @@ def test_winter_on_peak():
     usage_time = "2020-01-24T05:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0951
+    assert rate == EXPECTED_WINTER_ON_PEAK_RATE
     assert is_on_peak is True
 
 
@@ -28,7 +40,7 @@ def test_summer_off_peak():
     usage_time = "2020-06-24T01:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0727
+    assert rate == EXPECTED_SUMMER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -37,7 +49,7 @@ def test_summer_on_peak():
     usage_time = "2020-06-24T15:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.2094
+    assert rate == EXPECTED_SUMMER_ON_PEAK_RATE
     assert is_on_peak is True
 
 
@@ -46,7 +58,7 @@ def test_peak_summer_off_peak():
     usage_time = "2020-07-24T01:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.073
+    assert rate == EXPECTED_PEAK_SUMMER_OFF_PEAK
     assert is_on_peak is False
 
 
@@ -55,7 +67,7 @@ def test_peak_summer_on_peak():
     usage_time = "2020-07-24T15:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.2409
+    assert rate == EXPECTED_PEAK_SUMMER_ON_PEAK
     assert is_on_peak is True
 
 
@@ -64,7 +76,7 @@ def test_winter_weekend():
     usage_time = "2020-02-08T6:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0691
+    assert rate == EXPECTED_WINTER_WEEKEND_RATE
     assert is_on_peak is False
 
 
@@ -73,7 +85,7 @@ def test_summer_weekend():
     usage_time = "2020-06-27T15:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0727
+    assert rate == EXPECTED_SUMMER_WEEKEND_RATE
     assert is_on_peak is False
 
 
@@ -82,7 +94,7 @@ def test_peak_summer_weekend():
     usage_time = "2020-07-18T15:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.073
+    assert rate == EXPECTED_PEAK_SUMMER_WEEKEND_RATE
     assert is_on_peak is False
 
 
@@ -91,7 +103,7 @@ def test_winter_new_years():
     usage_time = "2020-01-01T06:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0691
+    assert rate == EXPECTED_WINTER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -100,7 +112,7 @@ def test_summer_memorial_day():
     usage_time = "2021-05-31T16:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0727
+    assert rate == EXPECTED_SUMMER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -109,7 +121,7 @@ def test_peak_summer_independence_day():
     usage_time = "2019-07-04T16:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.073
+    assert rate == EXPECTED_PEAK_SUMMER_OFF_PEAK
     assert is_on_peak is False
 
 
@@ -118,7 +130,7 @@ def test_summer_labor_day():
     usage_time = "2020-09-07T16:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0727
+    assert rate == EXPECTED_SUMMER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -127,7 +139,7 @@ def test_winter_thanksgiving_day():
     usage_time = "2020-11-26T17:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0691
+    assert rate == EXPECTED_WINTER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 
@@ -136,7 +148,7 @@ def test_winter_christmas_day():
     usage_time = "2020-12-24T17:00:00"
     rate, is_on_peak = get_rate(usage_time)
 
-    assert rate == 0.0691
+    assert rate == EXPECTED_WINTER_OFF_PEAK_RATE
     assert is_on_peak is False
 
 

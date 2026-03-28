@@ -16,10 +16,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Utilities"
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 dependencies    = []
 
 [project.urls]
@@ -35,18 +35,93 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["srpenergy*"]
 
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+indent-width = 4
+
+extend-exclude = [
+    "docs/_build",
+    "htmlcov",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors          (was: flake8)
+    "W",    # pycodestyle warnings        (was: flake8)
+    "F",    # pyflakes                    (was: flake8)
+    "I",    # isort                       (was: isort)
+    "D",    # pydocstyle                  (was: flake8-docstrings + pydocstyle)
+    "S",    # bandit security             (was: bandit)
+    "B",    # flake8-bugbear              (catches real bugs, highly recommended)
+    "C4",   # flake8-comprehensions       (cleaner comprehensions)
+    "UP",   # pyupgrade                   (modernises syntax automatically)
+    "SIM",  # flake8-simplify             (simplifies redundant constructs)
+    "RET",  # flake8-return               (cleaner return statements)
+    "PTH",  # flake8-use-pathlib          (prefer pathlib over os.path)
+    "N",    # pep8-naming                 (replaces pylint naming checks)
+    "PL",   # pylint                      (partial pylint replacement)
+    "RUF",  # ruff-specific rules         (always recommended)
+]
+
+ignore = [
+    # ── Carried from your .flake8 ignore list ──
+    "E501",   # line too long — ruff format handles this
+    "E203",   # whitespace before ':' — black/ruff-format compatible
+    "D202",   # no blank lines after function docstring
+
+    # ── Docstring convention: pick one style, suppress the conflicting rule ──
+    # D211 + D212 = "no-blank-line-before-class" + "multi-line-summary-first-line"
+    # D203 + D213 = the opposing pair — disable whichever conflicts with yours
+    "D203",   # conflicts with D211 (blank line before class docstring)
+    "D213",   # conflicts with D212 (multi-line docstring summary on first line)
+]
+
+# Only auto-fix safe, non-destructive rules
+fixable = [
+    "F401",   # remove unused imports
+    "I",      # isort — always safe to auto-fix
+    "UP",     # pyupgrade — safe syntax modernisation
+    "RUF100", # remove unused `# noqa` comments
+    "B",      # bugbear — most fixes are safe
+    "C4",     # comprehension fixes are safe
+]
+unfixable = [
+    "F841",   # unused variable — don't silently delete, might be intentional
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Mirrors your [tool.bandit.assert_used] skips exactly
+"*_test.py"    = ["S101", "S105", "S106", "D"]  # assert + hardcoded creds ok in tests, skip docstrings
+"*/test_*.py"  = ["S101", "S105", "S106", "D"]
+"__init__.py"  = ["F401", "D104"]               # allow unused imports and missing docstring
+
+[tool.ruff.lint.isort]
+# Mirrors your [tool.isort] config exactly
+known-first-party = ["srpenergy", "tests"]
+force-sort-within-sections = true
+forced-separate = ["tests"]
+combine-as-imports = true
+# Note: profile = "black" is ruff's default behaviour, no setting needed
+
+[tool.ruff.lint.pydocstyle]
+# Set to match your docstring style: "numpy", "google", or "pep257"
+convention = "numpy"   # adjust if your docstrings aren't numpy-style
+
+[tool.ruff.lint.pylint]
+max-args = 5           # pylint default; tune to your codebase
+
+[tool.ruff.format]
+# Drop-in Black replacement — these are already the defaults, but explicit is better
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"     # matches your pylintrc + pyproject [FORMAT] LF setting
+
 [tool.codespell]
 skip = './.*,./.pyc,./docs/_build/*,./htmlcov/*'
 count = true
 quiet-level = 2
-
-[tool.isort]
-profile = "black"
-# will group `import x` and `from x import` of the same module.
-force_sort_within_sections = true
-known_first_party = "srpenergy,tests"
-forced_separate = "tests"
-combine_as_imports = true
 
 # https://bandit.readthedocs.io/en/latest/config.html
 [tool.bandit]

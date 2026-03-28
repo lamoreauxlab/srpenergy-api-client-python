@@ -132,14 +132,15 @@ jobs:
           . venv/bin/activate
           pre-commit run --hook-stage manual rstcheck --all-files --show-diff-on-failure
 
-      - name: Python Lint
-        id: python-lint
+      - name: Run Python (lint + format)
         run: |
           . venv/bin/activate
+          pre-commit run --hook-stage manual ruff-check --all-files --show-diff-on-failure
+          pre-commit run --hook-stage manual ruff-format --all-files --show-diff-on-failure
 
-          pre-commit run --hook-stage manual isort --all-files --show-diff-on-failure
-          pre-commit run --hook-stage manual black --all-files --show-diff-on-failure
-          pre-commit run --hook-stage manual flake8 --all-files --show-diff-on-failure
+      - name: Run Python security and static analysis
+        run: |
+          . venv/bin/activate
           pre-commit run --hook-stage manual bandit --all-files --show-diff-on-failure
           pre-commit run --hook-stage manual pylint --all-files --show-diff-on-failure
 

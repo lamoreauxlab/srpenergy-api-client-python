@@ -5,25 +5,17 @@ repos:
         - id: codespell
           additional_dependencies:
             - tomli
-    - repo: https://github.com/pycqa/isort
-      rev: 5.13.2
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.15.8   # keep in sync with requirements-dev.txt
       hooks:
-        - id: isort
-    - repo: 'https://github.com/psf/black'
-      rev: 24.3.0
-      hooks:
-        - id: black
-          args:
-            - '--safe'
-            - '--quiet'
-    - repo: 'https://github.com/pycqa/flake8'
-      rev: 7.0.0
-      hooks:
-        - id: flake8
-          additional_dependencies:
-            - flake8-docstrings==1.6.0
-            - pydocstyle==6.3.0
-          files: ^(srpenergy|tests)\/.+\.py$
+        # Linter — runs first, fixes what it safely can
+        - id: ruff-check
+          args: [--fix]
+          types_or: [python, pyi, pyproject]
+        # Formatter — runs after linter so it can clean up any fix output
+        - id: ruff-format
+          types_or: [python, pyi]
+
     - repo: 'https://github.com/pre-commit/pre-commit-hooks'
       rev: v4.1.0
       hooks:

@@ -13,6 +13,14 @@ import requests
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
+# Peak hours
+SUMMER_PEAK_START = 14  # 2 PM
+SUMMER_PEAK_END = 20  # 8 PM
+WINTER_PEAK_MORNING_START = 5  # 5 AM
+WINTER_PEAK_MORNING_END = 9  # 9 AM
+WINTER_PEAK_EVENING_START = 17  # 5 PM
+WINTER_PEAK_EVENING_END = 21  # 9 PM
+
 
 def get_pretty_date(date_part):
     """Return a formatted date from an iso date."""
@@ -67,22 +75,22 @@ def get_rate(str_usage_time):
 
     # Holidays (New Years, Independence, Memorial, Labor, Thanks, Christmas)
     is_holiday = usage_time.month == 1 and usage_time.day == 1
-    is_holiday = is_holiday or (usage_time.day == 4 and usage_time.month == 7)
+    is_holiday = is_holiday or (usage_time.day == 4 and usage_time.month == 7)  # noqa: PLR2004
     is_holiday = is_holiday or (
-        usage_time.month == 5 and (week_day_idx == 0 and (31 - usage_time.day) < 7)
+        usage_time.month == 5 and (week_day_idx == 0 and (31 - usage_time.day) < 7)  # noqa: PLR2004
     )
     is_holiday = is_holiday or (
-        usage_time.month == 9 and (week_day_idx == 0 and (usage_time.day <= 7))
+        usage_time.month == 9 and (week_day_idx == 0 and (usage_time.day <= 7))  # noqa: PLR2004
     )
-    is_holiday = is_holiday or (usage_time.month == 11 and week_day_idx == 3)
-    is_holiday = is_holiday or (usage_time.month == 12 and usage_time.day == 24)
+    is_holiday = is_holiday or (usage_time.month == 11 and week_day_idx == 3)  # noqa: PLR2004
+    is_holiday = is_holiday or (usage_time.month == 12 and usage_time.day == 24)  # noqa: PLR2004
 
-    is_weekend = week_day_idx > 4
+    is_weekend = week_day_idx > 4  # noqa: PLR2004
 
     if peak_summer_start_date <= usage_time <= peak_summer_end_date:
         # Check if is Peak Summer
 
-        is_peak = 14 <= usage_time.hour < 20
+        is_peak = SUMMER_PEAK_START <= usage_time.hour < SUMMER_PEAK_END
         peak_rate = 0.2409
         non_peak_rate = 0.073
 
@@ -90,7 +98,7 @@ def get_rate(str_usage_time):
         # Check if regular Summer
 
         # Is peak time
-        is_peak = 14 <= usage_time.hour < 20
+        is_peak = SUMMER_PEAK_START <= usage_time.hour < SUMMER_PEAK_END
         peak_rate = 0.2094
         non_peak_rate = 0.0727
 
@@ -98,16 +106,17 @@ def get_rate(str_usage_time):
         # Must be winter
 
         # Check if in Peak hours
-        is_peak = 5 <= usage_time.hour < 9 or 17 <= usage_time.hour < 21
+        is_peak = (
+            WINTER_PEAK_MORNING_START <= usage_time.hour < WINTER_PEAK_MORNING_END
+            or WINTER_PEAK_EVENING_START <= usage_time.hour < WINTER_PEAK_EVENING_END
+        )
 
         peak_rate = 0.0951
         non_peak_rate = 0.0691
 
     is_peak = is_peak and not is_holiday and not is_weekend
-    if is_peak:
-        rate = peak_rate
-    else:
-        rate = non_peak_rate
+
+    rate = peak_rate if is_peak else non_peak_rate
 
     return rate, is_peak
 
@@ -135,7 +144,7 @@ class SrpEnergyClient:
 
     """
 
-    def __init__(self, accountid, username, password):  # noqa: D107
+    def __init__(self, accountid, username, password):
 
         # Validate parameters
         if accountid is None:
@@ -187,18 +196,14 @@ class SrpEnergyClient:
 
         """
         try:
-
             with requests.Session() as session:
-
                 response = session.post(
                     BASE_USAGE_URL + "/login/authorize",
                     data={"username": self.username, "password": self.password},
                 )
                 data = response.json()
 
-                valid = data["message"] == "Log in successful."
-
-                return valid
+                return data["message"] == "Log in successful."
 
         except Exception:  # pylint: disable=W0703
             return False
@@ -267,13 +272,11 @@ class SrpEnergyClient:
             raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
-
             # Convert datetime to strings
             str_startdate = startdate.strftime("%m-%d-%Y")
             str_enddate = enddate.strftime("%m-%d-%Y")
 
             with requests.Session() as session:
-
                 response = session.post(
                     BASE_USAGE_URL + "login/authorize",
                     data={"username": self.username, "password": self.password},
@@ -298,7 +301,6 @@ class SrpEnergyClient:
 
                 usage = []
                 for row in hourly_usage_list:
-
                     total_kwh = row["totalKwh"]
                     if total_kwh == 0:
                         # Build the total_kwh from separate fields for EZ-3.
@@ -321,13 +323,9 @@ class SrpEnergyClient:
 
                     # Check if on Time of Use Plan
                     if is_tou:
-
                         rate, is_peak = get_rate(row["date"])
 
-                        if is_peak:
-                            total_kwh = row["onPeakKwh"]
-                        else:
-                            total_kwh = row["offPeakKwh"]
+                        total_kwh = row["onPeakKwh"] if is_peak else row["offPeakKwh"]
 
                         total_cost = total_kwh * rate
 
