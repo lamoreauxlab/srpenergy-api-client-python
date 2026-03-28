@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from importlib.metadata import version
 import os
 
 from dotenv import load_dotenv
@@ -24,5 +25,7 @@ client = SrpEnergyClient(accountid, username, password)
 usage = client.usage(start_date, end_date)
 
 date, hour, isodate, kwh, cost = usage[0]
+
+print(f"SrpEnergyClient version: {version('srpenergy')}")
 
 print(f"Date: {date}, Hour: {hour}, ISO: {isodate}, kWh: {kwh}, Cost: {cost}")
