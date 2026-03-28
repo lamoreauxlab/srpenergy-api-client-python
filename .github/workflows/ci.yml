@@ -45,7 +45,7 @@ jobs:
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4
         with:
           path: venv
           key: >-
@@ -60,7 +60,7 @@ jobs:
           pip install -r requirements_dev.txt
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           lookup-only: true
@@ -90,7 +90,7 @@ jobs:
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: venv
           fail-on-cache-miss: true
@@ -99,7 +99,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
@@ -193,7 +193,7 @@ jobs:
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: venv
           fail-on-cache-miss: true
@@ -202,7 +202,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
@@ -237,7 +237,7 @@ jobs:
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: venv
           fail-on-cache-miss: true
@@ -246,7 +246,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4.0.2
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true

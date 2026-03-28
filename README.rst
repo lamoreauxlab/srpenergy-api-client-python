@@ -172,12 +172,11 @@ Summary of the most relevant points:
 Ordering of imports
 -------------------
 
-Instead of order the imports manually, use `isort <https://github.com/timothycrosley/isort>`_.
+Import ordering is enforced automatically by Ruff. To fix import order across the codebase:
 
 .. code-block:: bash
 
-    pip3 install isort
-    isort .
+    ruff check --fix .
 
 
 Use new style string formatting
@@ -216,6 +215,10 @@ As it states in the `Style Guidelines`_ section all code is checked to verify th
     pre-commit run --all-files codespell
 
     # Run linters outside of pre-commit
+    ruff check .                        # lint
+    ruff check --fix .                  # auto-fix lint violations
+    ruff format --check .               # check formatting without applying
+    ruff format .                       # format code (replaces: black .)
     codespell .
     shellcheck -x ./script/*.sh
     rstcheck README.rst
