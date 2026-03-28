@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Generate partial pre-commit restore key
         id: generate_pre-commit_cache_key
         run: >-
@@ -36,7 +36,7 @@ jobs:
       - info
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
         uses: actions/setup-python@v5.1.0
@@ -81,7 +81,7 @@ jobs:
       - pre-commit
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
         uses: actions/setup-python@v5.1.0
@@ -161,7 +161,7 @@ jobs:
         python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5.1.0
         with:
@@ -184,7 +184,7 @@ jobs:
       - linting
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
         uses: actions/setup-python@v5.1.0
@@ -228,7 +228,7 @@ jobs:
       - linting
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4.1.2
+        uses: actions/checkout@v4
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
         uses: actions/setup-python@v5.1.0
