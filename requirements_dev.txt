@@ -10,6 +10,7 @@ pylint-strict-informational==0.1
 pylint==3.0.3
 pytest-cov==4.1.0
 pytest==7.4.4
+python-dotenv==1.2.2
 rstcheck==6.2.0
 ruff==0.15.8
 sphinx-rtd-theme==2.0.0
