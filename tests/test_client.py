@@ -1,11 +1,12 @@
 """The tests for the Srp Energy API."""
 
 from datetime import datetime, timedelta, timezone
+import re
 from unittest.mock import Mock, patch
 
 import pytest
 
-from srpenergy.client import SrpEnergyClient
+from srpenergy.client import SrpEnergyClient, SrpEnergyError
 
 from tests.common import (
     MOCK_LOGIN_RESPONSE,
@@ -13,6 +14,7 @@ from tests.common import (
     PATCH_POST,
     TEST_PASSWORD,
     TEST_USER_NAME,
+    MockResponse,
     get_mock_requests,
 )
 
@@ -380,3 +382,53 @@ def test_date_timezone_error():
 
         assert kwh == EXPECTED_FIRST_KWH
         assert cost == EXPECTED_FIRST_COST
+
+
+def test_check_cloudflare_response_raises_error():
+    """Test that a 403 response raises SrpEnergyError with access denied message."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+        session_post.return_value = MockResponse(
+            "<html>Access Denied</html>", 403, {}, {}
+        )
+        session_get.side_effect = get_mock_requests([])
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        with pytest.raises(
+            SrpEnergyError,
+            match=re.escape("Access denied (403) during 'login/authorize'."),
+        ):
+            client.usage(datetime(2020, 6, 24), datetime(2020, 6, 24, 23))
+
+
+def test_check_missing_xsrf_raises_error():
+    """Test that a 403 response raises SrpEnergyError with access denied message."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+        session_post.return_value = MOCK_LOGIN_RESPONSE
+        session_get.side_effect = get_mock_requests(
+            [], antiforgery_status=403, antiforgery_cookies={}
+        )
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        with pytest.raises(
+            SrpEnergyError,
+            match="XSRF token cookie missing after antiforgerytoken request",
+        ):
+            client.usage(datetime(2020, 6, 24), datetime(2020, 6, 24, 23))
+
+
+def test_login_authorize_http_error_raises_srp_energy_error():
+    """Test that a 500 during login/authorize raises SrpEnergyError with HTTP error message."""
+    with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
+        session_post.return_value = MockResponse(
+            "<html>Server Error</html>", 500, {}, {}
+        )
+        session_get.return_value = MockResponse(
+            "<html>Server Error</html>", 500, {}, {}
+        )
+
+        client = SrpEnergyClient(TEST_ACCOUNT_ID, TEST_USER_NAME, TEST_PASSWORD)
+
+        with pytest.raises(SrpEnergyError, match="HTTP error during 'login/authorize'"):
+            client.usage(datetime(2020, 6, 24), datetime(2020, 6, 24, 23))

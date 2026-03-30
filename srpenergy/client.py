@@ -13,6 +13,20 @@ import requests
 
 BASE_USAGE_URL = "https://myaccount.srpnet.com/myaccountapi/api/"
 
+BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Referer": BASE_USAGE_URL,
+}
+HTTP_FORBIDDEN_ERROR = 403
+
 # Peak hours
 SUMMER_PEAK_START = 14  # 2 PM
 SUMMER_PEAK_END = 20  # 8 PM
@@ -121,6 +135,10 @@ def get_rate(str_usage_time):
     return rate, is_peak
 
 
+class SrpEnergyError(Exception):
+    """Raised when the SRP API returns an unexpected response."""
+
+
 class SrpEnergyClient:
     """SrpEnergyClient(accountid, username, password).
 
@@ -172,6 +190,22 @@ class SrpEnergyClient:
         self.username = username
         self.password = password
 
+    def _check_response(self, response: requests.Response, step: str) -> None:
+        """Raise a clear error if a response indicates failure."""
+        if response.status_code == HTTP_FORBIDDEN_ERROR:
+            # Cloudflare or SRP access control blocked the request
+            raise SrpEnergyError(
+                f"Access denied (403) during '{step}'. "
+                "SRP's site may be blocking automated requests. "
+                f"Ray ID may be present in response: {response.text[:200]}"
+            )
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as e:
+            raise SrpEnergyError(
+                f"HTTP error during '{step}': {e} — body: {response.text[:200]}"
+            ) from e
+
     def validate(self):
         """Validate user credentials.
 
@@ -197,10 +231,14 @@ class SrpEnergyClient:
         """
         try:
             with requests.Session() as session:
+                session.headers.update(BROWSER_HEADERS)
+
+                # Step 1: Authenticate
                 response = session.post(
                     BASE_USAGE_URL + "/login/authorize",
                     data={"username": self.username, "password": self.password},
                 )
+                self._check_response(response, "login/authorize")
                 data = response.json()
 
                 return data["message"] == "Log in successful."
@@ -277,24 +315,38 @@ class SrpEnergyClient:
             str_enddate = enddate.strftime("%m-%d-%Y")
 
             with requests.Session() as session:
+                session.headers.update(BROWSER_HEADERS)
+
+                # Step 1: Authenticate
                 response = session.post(
                     BASE_USAGE_URL + "login/authorize",
                     data={"username": self.username, "password": self.password},
                 )
+                self._check_response(response, "login/authorize")
 
+                # Step 2: Fetch XSRF token
                 response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
+
+                if "xsrf-token" not in response.cookies:
+                    raise SrpEnergyError(
+                        "XSRF token cookie missing after antiforgerytoken request. "
+                        f"Cookies received: {list(response.cookies.keys())}"
+                    )
+
                 xsrf_token = unquote(response.cookies["xsrf-token"])
 
+                # Step 3: Fetch usage data
                 response = session.get(
-                    BASE_USAGE_URL
-                    + "usage/hourlydetail?billaccount="
-                    + self.accountid
-                    + "&beginDate="
-                    + str_startdate
-                    + "&endDate="
-                    + str_enddate,
+                    BASE_USAGE_URL + "usage/hourlydetail",
+                    params={
+                        "billaccount": self.accountid,
+                        "beginDate": str_startdate,
+                        "endDate": str_enddate,
+                    },
                     headers={"x-xsrf-token": xsrf_token},
                 )
+
+                self._check_response(response, "usage/hourlydetail")
 
                 data = response.json()
                 hourly_usage_list = data["hourlyUsageList"]
