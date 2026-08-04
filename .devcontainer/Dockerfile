@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/python:3.10-bullseye
 
-# hadolint ignore=DL3008
 RUN rm -f /etc/apt/sources.list.d/yarn.list
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-transport-https \
         ca-certificates \
