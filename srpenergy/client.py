@@ -27,15 +27,6 @@ BROWSER_HEADERS = {
 }
 HTTP_FORBIDDEN_ERROR = 403
 
-# Peak hours
-SUMMER_PEAK_START = 14  # 2 PM
-SUMMER_PEAK_END = 20  # 8 PM
-WINTER_PEAK_MORNING_START = 5  # 5 AM
-WINTER_PEAK_MORNING_END = 9  # 9 AM
-WINTER_PEAK_EVENING_START = 17  # 5 PM
-WINTER_PEAK_EVENING_END = 21  # 9 PM
-
-
 def get_pretty_date(date_part):
     """Return a formatted date from an iso date."""
     date = parse(date_part)
@@ -46,93 +37,6 @@ def get_pretty_time(date_part):
     """Return a formatted time from an iso date."""
     date = parse(date_part)
     return date.strftime("%H:%M %p")
-
-
-def get_rate(str_usage_time):
-    """Return the time of use pricing for the given time.
-
-    From the SRP website
-    peak times:
-    Winter      Nov-Apr (5am-9am, 5pm-9pm) 9.51 peak, 6.91 offpeak
-    Summer      May-Oct (2pm-8pm) 20.94 peak, 7.27 offpeak
-    Summer Peak Jul,Aug (2pm-8pm) 24.09, 7.3
-
-    Higher on-peak prices are in effect Monday through Friday
-    only during the hours shown.
-    Lower off-peak prices are in effect all other weekday hours,
-    weekends and six observed holidays:
-    New Year's Day, Memorial Day, Independence Day,
-    Labor Day, Thanksgiving Day and Christmas Day.
-
-    see https://srpnet.com/prices/pdfx/April2015/E-26.pdf
-    """
-    # Validate parameters
-    if str_usage_time is None:
-        raise TypeError("Parameter str_usage_time can not be none.")
-
-    try:
-        usage_time = parse(str_usage_time)
-    except ValueError as error:
-        raise ValueError(
-            "Parameter str_usage_time should be parsed as a datetime."
-        ) from error
-
-    summer_start_date = datetime(usage_time.year, 5, 1, 0, 0, 0)
-    summer_end_date = datetime(usage_time.year, 11, 1, 0, 0, 0) - timedelta(seconds=1)
-
-    peak_summer_start_date = datetime(usage_time.year, 7, 1, 0, 0, 0)
-    peak_summer_end_date = datetime(usage_time.year, 9, 1, 0, 0, 0) - timedelta(
-        seconds=1
-    )
-
-    week_day_idx = usage_time.weekday()
-
-    # Holidays (New Years, Independence, Memorial, Labor, Thanks, Christmas)
-    is_holiday = usage_time.month == 1 and usage_time.day == 1
-    is_holiday = is_holiday or (usage_time.day == 4 and usage_time.month == 7)  # noqa: PLR2004
-    is_holiday = is_holiday or (
-        usage_time.month == 5 and (week_day_idx == 0 and (31 - usage_time.day) < 7)  # noqa: PLR2004
-    )
-    is_holiday = is_holiday or (
-        usage_time.month == 9 and (week_day_idx == 0 and (usage_time.day <= 7))  # noqa: PLR2004
-    )
-    is_holiday = is_holiday or (usage_time.month == 11 and week_day_idx == 3)  # noqa: PLR2004
-    is_holiday = is_holiday or (usage_time.month == 12 and usage_time.day == 24)  # noqa: PLR2004
-
-    is_weekend = week_day_idx > 4  # noqa: PLR2004
-
-    if peak_summer_start_date <= usage_time <= peak_summer_end_date:
-        # Check if is Peak Summer
-
-        is_peak = SUMMER_PEAK_START <= usage_time.hour < SUMMER_PEAK_END
-        peak_rate = 0.2409
-        non_peak_rate = 0.073
-
-    elif summer_start_date <= usage_time <= summer_end_date:
-        # Check if regular Summer
-
-        # Is peak time
-        is_peak = SUMMER_PEAK_START <= usage_time.hour < SUMMER_PEAK_END
-        peak_rate = 0.2094
-        non_peak_rate = 0.0727
-
-    else:
-        # Must be winter
-
-        # Check if in Peak hours
-        is_peak = (
-            WINTER_PEAK_MORNING_START <= usage_time.hour < WINTER_PEAK_MORNING_END
-            or WINTER_PEAK_EVENING_START <= usage_time.hour < WINTER_PEAK_EVENING_END
-        )
-
-        peak_rate = 0.0951
-        non_peak_rate = 0.0691
-
-    is_peak = is_peak and not is_holiday and not is_weekend
-
-    rate = peak_rate if is_peak else non_peak_rate
-
-    return rate, is_peak
 
 
 class SrpEnergyError(Exception):
@@ -372,14 +276,6 @@ class SrpEnergyClient:
                             + row["shoulderCost"]
                             + row["superOffPeakCost"]
                         )
-
-                    # Check if on Time of Use Plan
-                    if is_tou:
-                        rate, is_peak = get_rate(row["date"])
-
-                        total_kwh = row["onPeakKwh"] if is_peak else row["offPeakKwh"]
-
-                        total_cost = total_kwh * rate
 
                     values = (
                         get_pretty_date(row["date"]),
