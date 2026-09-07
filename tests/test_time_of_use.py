@@ -6,12 +6,6 @@ from unittest.mock import patch
 from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
-    EXPECTED_PEAK_SUMMER_OFF_PEAK,
-    EXPECTED_PEAK_SUMMER_ON_PEAK,
-    EXPECTED_SUMMER_OFF_PEAK_RATE,
-    EXPECTED_SUMMER_ON_PEAK_RATE,
-    EXPECTED_WINTER_OFF_PEAK_RATE,
-    EXPECTED_WINTER_ON_PEAK_RATE,
     MOCK_LOGIN_RESPONSE,
     PATCH_GET,
     PATCH_POST,
@@ -33,7 +27,7 @@ MOCK_USAGE_TOU_SUMMER_OFF_PEAK_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.55,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.00,
@@ -80,7 +74,7 @@ MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE = {
             "shoulderKwh": 0.0,
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
-            "onPeakCost": 0.0,
+            "onPeakCost": 1.60,
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
@@ -129,7 +123,7 @@ MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.68,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.00,
@@ -176,7 +170,7 @@ MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE = {
             "shoulderKwh": 0.0,
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
-            "onPeakCost": 0.0,
+            "onPeakCost": 1.81,
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
@@ -225,7 +219,7 @@ MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.15,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.00,
@@ -272,7 +266,7 @@ MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE = {
             "shoulderKwh": 0.0,
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
-            "onPeakCost": 0.0,
+            "onPeakCost": 0.24,
             "offPeakCost": 0.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
@@ -321,7 +315,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.44,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -335,7 +329,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.59,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -349,7 +343,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.55,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -363,7 +357,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.53,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -377,7 +371,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.35,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -391,7 +385,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.28,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -405,7 +399,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.33,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -419,7 +413,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.31,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -433,7 +427,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.4,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -447,7 +441,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.43,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -461,7 +455,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.44,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -475,7 +469,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.51,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -489,7 +483,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.71,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -503,7 +497,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 1.01,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -517,7 +511,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.99,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -531,7 +525,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.79,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -545,7 +539,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.66,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -559,7 +553,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 1.0,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -573,7 +567,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.77,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -587,7 +581,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.65,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -601,7 +595,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.49,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -615,7 +609,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.45,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -629,7 +623,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.41,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -643,7 +637,7 @@ MOCK_USAGE_TOU_GENERAL_RESPONSE = {
             "superOffPeakKwh": 0.0,
             "totalKwh": 0.0,
             "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
+            "offPeakCost": 0.44,
             "shoulderCost": 0.0,
             "superOffPeakCost": 0.0,
             "totalCost": 0.0,
@@ -669,6 +663,9 @@ EXPECTED_SUMMER_OFF_PEAK_USAGE_COUNT = len(
 EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_SUMMER_OFF_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["offPeakKwh"]
+EXPECTED_SUMMER_OFF_PEAK_FIRST_COST = MOCK_USAGE_TOU_SUMMER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakCost"]
 
 EXPECTED_SUMMER_ON_PEAK_USAGE_COUNT = len(
     MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE["hourlyUsageList"]
@@ -676,6 +673,9 @@ EXPECTED_SUMMER_ON_PEAK_USAGE_COUNT = len(
 EXPECTED_SUMMER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["onPeakKwh"]
+EXPECTED_SUMMER_ON_PEAK_FIRST_COST = MOCK_USAGE_TOU_SUMMER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakCost"]
 
 EXPECTED_PEAK_SUMMER_OFF_PEAK_USAGE_COUNT = len(
     MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE["hourlyUsageList"]
@@ -683,6 +683,9 @@ EXPECTED_PEAK_SUMMER_OFF_PEAK_USAGE_COUNT = len(
 EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["offPeakKwh"]
+EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_COST = MOCK_USAGE_TOU_PEAK_SUMMER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakCost"]
 
 EXPECTED_PEAK_SUMMER_ON_PEAK_USAGE_COUNT = len(
     MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE["hourlyUsageList"]
@@ -690,6 +693,9 @@ EXPECTED_PEAK_SUMMER_ON_PEAK_USAGE_COUNT = len(
 EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["onPeakKwh"]
+EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_COST = MOCK_USAGE_TOU_PEAK_SUMMER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakCost"]
 
 EXPECTED_WINTER_OFF_PEAK_USAGE_COUNT = len(
     MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE["hourlyUsageList"]
@@ -697,6 +703,9 @@ EXPECTED_WINTER_OFF_PEAK_USAGE_COUNT = len(
 EXPECTED_WINTER_OFF_PEAK_FIRST_KWH = MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["offPeakKwh"]
+EXPECTED_WINTER_OFF_PEAK_FIRST_COST = MOCK_USAGE_TOU_WINTER_OFF_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["offPeakCost"]
 
 EXPECTED_WINTER_ON_PEAK_USAGE_COUNT = len(
     MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE["hourlyUsageList"]
@@ -704,10 +713,13 @@ EXPECTED_WINTER_ON_PEAK_USAGE_COUNT = len(
 EXPECTED_WINTER_ON_PEAK_FIRST_KWH = MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE[
     "hourlyUsageList"
 ][0]["onPeakKwh"]
+EXPECTED_WINTER_ON_PEAK_FIRST_COST = MOCK_USAGE_TOU_WINTER_ON_PEAK_RESPONSE[
+    "hourlyUsageList"
+][0]["onPeakCost"]
 
 EXPECTED_DAILY_USAGE_COUNT = len(MOCK_USAGE_TOU_GENERAL_RESPONSE["hourlyUsageList"])
 EXPECTED_DAILY_TOTAL_KWH = 123
-EXPECTED_DIALY_TOTAL_COST = 8.92
+EXPECTED_DIALY_TOTAL_COST = 13.53  # sum of this fixture's synthetic offPeakCost values
 
 
 def test_time_of_use_summer_off_peak_usage():
@@ -728,9 +740,7 @@ def test_time_of_use_summer_off_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_SUMMER_OFF_PEAK_FIRST_KWH * EXPECTED_SUMMER_OFF_PEAK_RATE, 2
-        )
+        assert cost == EXPECTED_SUMMER_OFF_PEAK_FIRST_COST
 
 
 def test_time_of_use_summer_on_peak_usage():
@@ -751,9 +761,7 @@ def test_time_of_use_summer_on_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_SUMMER_ON_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_SUMMER_ON_PEAK_FIRST_KWH * EXPECTED_SUMMER_ON_PEAK_RATE, 2
-        )
+        assert cost == EXPECTED_SUMMER_ON_PEAK_FIRST_COST
 
 
 def test_time_of_use_peak_summer_off_peak_usage():
@@ -774,9 +782,7 @@ def test_time_of_use_peak_summer_off_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_KWH * EXPECTED_PEAK_SUMMER_OFF_PEAK, 2
-        )
+        assert cost == EXPECTED_PEAK_SUMMER_OFF_PEAK_FIRST_COST
 
 
 def test_time_of_use_peak_summer_on_peak_usage():
@@ -797,9 +803,7 @@ def test_time_of_use_peak_summer_on_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_KWH * EXPECTED_PEAK_SUMMER_ON_PEAK, 2
-        )
+        assert cost == EXPECTED_PEAK_SUMMER_ON_PEAK_FIRST_COST
 
 
 def test_time_of_use_winter_off_peak_usage():
@@ -820,9 +824,7 @@ def test_time_of_use_winter_off_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_WINTER_OFF_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_WINTER_OFF_PEAK_FIRST_KWH * EXPECTED_WINTER_OFF_PEAK_RATE, 2
-        )
+        assert cost == EXPECTED_WINTER_OFF_PEAK_FIRST_COST
 
 
 def test_time_of_use_winter_on_peak_usage():
@@ -843,9 +845,7 @@ def test_time_of_use_winter_on_peak_usage():
         _date, _hour, _isodate, kwh, cost = usage[0]
 
         assert kwh == EXPECTED_WINTER_ON_PEAK_FIRST_KWH
-        assert cost == round(
-            EXPECTED_WINTER_ON_PEAK_FIRST_KWH * EXPECTED_WINTER_ON_PEAK_RATE, 2
-        )
+        assert cost == EXPECTED_WINTER_ON_PEAK_FIRST_COST
 
 
 def test_daily_aggregation_tou():
