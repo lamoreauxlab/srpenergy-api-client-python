@@ -214,79 +214,183 @@ class SrpEnergyClient:
             raise ValueError("Parameter startdate can not be greater than now.")
 
         try:
-            # Convert datetime to strings
-            str_startdate = startdate.strftime("%m-%d-%Y")
-            str_enddate = enddate.strftime("%m-%d-%Y")
+            hourly_usage_list = self._fetch_hourly_rows(startdate, enddate)
 
-            with requests.Session() as session:
-                session.headers.update(BROWSER_HEADERS)
-
-                # Step 1: Authenticate
-                response = session.post(
-                    BASE_USAGE_URL + "login/authorize",
-                    data={"username": self.username, "password": self.password},
-                )
-                self._check_response(response, "login/authorize")
-
-                # Step 2: Fetch XSRF token
-                response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
-
-                if "xsrf-token" not in response.cookies:
-                    raise SrpEnergyError(
-                        "XSRF token cookie missing after antiforgerytoken request. "
-                        f"Cookies received: {list(response.cookies.keys())}"
+            usage = []
+            for row in hourly_usage_list:
+                total_kwh = row["totalKwh"]
+                if total_kwh == 0:
+                    # Build the total_kwh from separate fields for EZ-3.
+                    total_kwh = (
+                        row["onPeakKwh"]
+                        + row["offPeakKwh"]
+                        + row["shoulderKwh"]
+                        + row["superOffPeakKwh"]
                     )
 
-                xsrf_token = unquote(response.cookies["xsrf-token"])
+                total_cost = row["totalCost"]
+                if total_cost == 0:
+                    # Build the total_cost from separate fields for EZ-3.
+                    total_cost = (
+                        row["onPeakCost"]
+                        + row["offPeakCost"]
+                        + row["shoulderCost"]
+                        + row["superOffPeakCost"]
+                    )
 
-                # Step 3: Fetch usage data
-                response = session.get(
-                    BASE_USAGE_URL + "usage/hourlydetail",
-                    params={
-                        "billaccount": self.accountid,
-                        "beginDate": str_startdate,
-                        "endDate": str_enddate,
-                    },
-                    headers={"x-xsrf-token": xsrf_token},
+                values = (
+                    get_pretty_date(row["date"]),
+                    get_pretty_time(row["date"]),
+                    row["date"],
+                    total_kwh,
+                    round(total_cost, 2),
+                )
+                usage.append(values)
+
+            return usage
+
+        except Exception as ex:
+            raise ex
+
+    def _fetch_hourly_rows(self, startdate, enddate):
+        """Authenticate and fetch raw hourly usage rows from the SRP API.
+
+        Returns
+        -------
+        list of dict
+            Raw ``hourlyUsageList`` rows exactly as SRP's API returns them,
+            each containing onPeakKwh/offPeakKwh/shoulderKwh/superOffPeakKwh
+            and their cost equivalents, plus totalKwh/totalCost.
+
+        Shared by both ``usage()`` (which collapses each row to a single
+        total) and ``usage_detailed()`` (which preserves the per-tariff-bucket
+        breakdown), so the login/session flow is implemented once.
+        """
+        str_startdate = startdate.strftime("%m-%d-%Y")
+        str_enddate = enddate.strftime("%m-%d-%Y")
+
+        with requests.Session() as session:
+            session.headers.update(BROWSER_HEADERS)
+
+            # Step 1: Authenticate
+            response = session.post(
+                BASE_USAGE_URL + "login/authorize",
+                data={"username": self.username, "password": self.password},
+            )
+            self._check_response(response, "login/authorize")
+
+            # Step 2: Fetch XSRF token
+            response = session.get(BASE_USAGE_URL + "login/antiforgerytoken")
+
+            if "xsrf-token" not in response.cookies:
+                raise SrpEnergyError(
+                    "XSRF token cookie missing after antiforgerytoken request. "
+                    f"Cookies received: {list(response.cookies.keys())}"
                 )
 
-                self._check_response(response, "usage/hourlydetail")
+            xsrf_token = unquote(response.cookies["xsrf-token"])
 
-                data = response.json()
-                hourly_usage_list = data["hourlyUsageList"]
+            # Step 3: Fetch usage data
+            response = session.get(
+                BASE_USAGE_URL + "usage/hourlydetail",
+                params={
+                    "billaccount": self.accountid,
+                    "beginDate": str_startdate,
+                    "endDate": str_enddate,
+                },
+                headers={"x-xsrf-token": xsrf_token},
+            )
 
-                usage = []
-                for row in hourly_usage_list:
-                    total_kwh = row["totalKwh"]
-                    if total_kwh == 0:
-                        # Build the total_kwh from separate fields for EZ-3.
-                        total_kwh = (
-                            row["onPeakKwh"]
-                            + row["offPeakKwh"]
-                            + row["shoulderKwh"]
-                            + row["superOffPeakKwh"]
-                        )
+            self._check_response(response, "usage/hourlydetail")
 
-                    total_cost = row["totalCost"]
-                    if total_cost == 0:
-                        # Build the total_cost from separate fields for EZ-3.
-                        total_cost = (
-                            row["onPeakCost"]
-                            + row["offPeakCost"]
-                            + row["shoulderCost"]
-                            + row["superOffPeakCost"]
-                        )
+            data = response.json()
+            return data["hourlyUsageList"]
 
-                    values = (
-                        get_pretty_date(row["date"]),
-                        get_pretty_time(row["date"]),
-                        row["date"],
-                        total_kwh,
-                        round(total_cost, 2),
+    def usage_detailed(self, startdate, enddate):
+        """Get hourly energy usage broken out by Time-of-Use tariff bucket.
+
+        Unlike ``usage()``, which collapses each hour to a single combined
+        kwh/cost figure, this preserves the on-peak/off-peak/shoulder/
+        super-off-peak breakdown as returned by SRP's API. For non-TOU
+        accounts, the four bucket fields will be 0 and ``total_kwh``/
+        ``total_cost`` will carry the real value instead.
+
+        Parameters
+        ----------
+        startdate : datetime
+            the start date
+        enddate : datetime
+            the end date
+
+        Returns
+        -------
+        list of dict
+            Each dict has keys: date, time, iso_date, on_peak_kwh,
+            off_peak_kwh, shoulder_kwh, super_off_peak_kwh, total_kwh,
+            on_peak_cost, off_peak_cost, shoulder_cost, super_off_peak_cost,
+            total_cost.
+
+        Raises
+        ------
+        ValueError
+            If ``startdate`` or ``enddate`` are not datetime,
+            or if ``startdate`` is greater than ``enddate``,
+            or if ``startdate`` is greater than now.
+        """
+        if not isinstance(startdate, datetime):
+            raise ValueError("Parameter startdate must be datetime.")
+
+        if not isinstance(enddate, datetime):
+            raise ValueError("Parameter enddate must be datetime.")
+
+        if startdate > enddate:
+            raise ValueError("Parameter startdate can not be greater than enddate.")
+
+        if startdate.timestamp() > datetime.now().timestamp():
+            raise ValueError("Parameter startdate can not be greater than now.")
+
+        try:
+            hourly_usage_list = self._fetch_hourly_rows(startdate, enddate)
+
+            usage = []
+            for row in hourly_usage_list:
+                total_kwh = row["totalKwh"]
+                if total_kwh == 0:
+                    total_kwh = (
+                        row["onPeakKwh"]
+                        + row["offPeakKwh"]
+                        + row["shoulderKwh"]
+                        + row["superOffPeakKwh"]
                     )
-                    usage.append(values)
 
-                return usage
+                total_cost = row["totalCost"]
+                if total_cost == 0:
+                    total_cost = (
+                        row["onPeakCost"]
+                        + row["offPeakCost"]
+                        + row["shoulderCost"]
+                        + row["superOffPeakCost"]
+                    )
+
+                usage.append(
+                    {
+                        "date": get_pretty_date(row["date"]),
+                        "time": get_pretty_time(row["date"]),
+                        "iso_date": row["date"],
+                        "on_peak_kwh": row["onPeakKwh"],
+                        "off_peak_kwh": row["offPeakKwh"],
+                        "shoulder_kwh": row["shoulderKwh"],
+                        "super_off_peak_kwh": row["superOffPeakKwh"],
+                        "total_kwh": total_kwh,
+                        "on_peak_cost": round(row["onPeakCost"], 2),
+                        "off_peak_cost": round(row["offPeakCost"], 2),
+                        "shoulder_cost": round(row["shoulderCost"], 2),
+                        "super_off_peak_cost": round(row["superOffPeakCost"], 2),
+                        "total_cost": round(total_cost, 2),
+                    }
+                )
+
+            return usage
 
         except Exception as ex:
             raise ex
