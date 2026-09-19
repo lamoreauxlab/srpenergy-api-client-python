@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Generate partial pre-commit restore key
         id: generate_pre-commit_cache_key
         run: >-
@@ -46,16 +46,16 @@ jobs:
       - info
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: venv
           key: >-
@@ -70,7 +70,7 @@ jobs:
           pip install -r requirements_dev.txt
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           lookup-only: true
@@ -91,16 +91,16 @@ jobs:
       - pre-commit
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: venv
           fail-on-cache-miss: true
@@ -109,7 +109,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
@@ -171,9 +171,9 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -194,16 +194,16 @@ jobs:
       - linting
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: venv
           fail-on-cache-miss: true
@@ -212,7 +212,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
@@ -238,16 +238,16 @@ jobs:
       - linting
     steps:
       - name: Check out code from github
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         id: python
-        uses: actions/setup-python@v5.1.0
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           check-latest: true
       - name: Restore base Python virtual environment
         id: cache-venv
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: venv
           fail-on-cache-miss: true
@@ -256,7 +256,7 @@ jobs:
               needs.info.outputs.pre-commit_cache_key }}
       - name: Restore pre-commit environment from cache
         id: cache-precommit
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: ${{ env.PRE_COMMIT_CACHE }}
           fail-on-cache-miss: true
