@@ -4,7 +4,7 @@ This module houses the main class used to fetch energy usage.
 
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import re
 from urllib.parse import unquote
 
@@ -26,6 +26,7 @@ BROWSER_HEADERS = {
     "Referer": BASE_USAGE_URL,
 }
 HTTP_FORBIDDEN_ERROR = 403
+
 
 def get_pretty_date(date_part):
     """Return a formatted date from an iso date."""
@@ -106,9 +107,8 @@ class SrpEnergyClient:
         try:
             response.raise_for_status()
         except requests.HTTPError as e:
-            raise SrpEnergyError(
-                f"HTTP error during '{step}': {e} — body: {response.text[:200]}"
-            ) from e
+            msg = f"HTTP error during '{step}': {e} — body: {response.text[:200]}"
+            raise SrpEnergyError(msg) from e
 
     def validate(self):
         """Validate user credentials.
@@ -140,7 +140,10 @@ class SrpEnergyClient:
                 # Step 1: Authenticate
                 response = session.post(
                     BASE_USAGE_URL + "/login/authorize",
-                    data={"username": self.username, "password": self.password},
+                    data={
+                        "username": self.username,
+                        "password": self.password,
+                    },
                 )
                 self._check_response(response, "login/authorize")
                 data = response.json()
@@ -150,7 +153,7 @@ class SrpEnergyClient:
         except Exception:  # pylint: disable=W0703
             return False
 
-    def usage(self, startdate, enddate, is_tou=False):  # pylint: disable=R0914
+    def usage(self, startdate, enddate, is_tou=False):  # pylint: disable=R0914,W0613
         """Get the energy usage for a given date range.
 
         Parameters
@@ -284,7 +287,7 @@ class SrpEnergyClient:
 
             if "xsrf-token" not in response.cookies:
                 raise SrpEnergyError(
-                    "XSRF token cookie missing after antiforgerytoken request. "
+                    "XSRF token cookie missing after antiforgerytoken request."
                     f"Cookies received: {list(response.cookies.keys())}"
                 )
 

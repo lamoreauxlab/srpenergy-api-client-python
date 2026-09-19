@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.10-bullseye
+FROM mcr.microsoft.com/devcontainers/python:3.10-bookworm
 
 RUN rm -f /etc/apt/sources.list.d/yarn.list
 # hadolint ignore=DL3008

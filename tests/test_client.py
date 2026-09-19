@@ -9,6 +9,7 @@ import pytest
 from srpenergy.client import SrpEnergyClient, SrpEnergyError
 
 from tests.common import (
+    HOURLY_USAGE_MOCK_ITEM,
     MOCK_LOGIN_RESPONSE,
     PATCH_GET,
     PATCH_POST,
@@ -30,20 +31,7 @@ MOCK_BAD_USAGE_RESPONSE = {
 }
 MOCK_USAGE_RESPONSE = {
     "hourlyUsageList": (
-        {
-            "date": "2019-10-09T00:00:00",
-            "hour": "2019-10-09T00:00:00",
-            "onPeakKwh": 0.0,
-            "offPeakKwh": 0.0,
-            "shoulderKwh": 0.0,
-            "superOffPeakKwh": 0.0,
-            "totalKwh": 0.4,
-            "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
-            "shoulderCost": 0.0,
-            "superOffPeakCost": 0.0,
-            "totalCost": 0.08,
-        },
+        HOURLY_USAGE_MOCK_ITEM,
         {
             "date": "2019-10-09T01:00:00",
             "hour": "2019-10-09T01:00:00",
@@ -385,7 +373,8 @@ def test_date_timezone_error():
 
 
 def test_check_cloudflare_response_raises_error():
-    """Test that a 403 response raises SrpEnergyError with access denied message."""
+    """Test that a 403 response raises SrpEnergyError with access denied
+    message."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
         session_post.return_value = MockResponse(
             "<html>Access Denied</html>", 403, {}, {}
@@ -402,7 +391,8 @@ def test_check_cloudflare_response_raises_error():
 
 
 def test_check_missing_xsrf_raises_error():
-    """Test that a 403 response raises SrpEnergyError with access denied message."""
+    """Test that a 403 response raises SrpEnergyError with access denied
+    message."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(
@@ -419,7 +409,8 @@ def test_check_missing_xsrf_raises_error():
 
 
 def test_login_authorize_http_error_raises_srp_energy_error():
-    """Test that a 500 during login/authorize raises SrpEnergyError with HTTP error message."""
+    """Test that a 500 during login/authorize raises SrpEnergyError with HTTP
+    error message."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
         session_post.return_value = MockResponse(
             "<html>Server Error</html>", 500, {}, {}

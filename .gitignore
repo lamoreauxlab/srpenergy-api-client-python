@@ -107,3 +107,6 @@ venv.bak/
 launch.json
 settings.json
 .env
+
+# macOS metadata
+**/.DS_Store
