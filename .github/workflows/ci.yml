@@ -223,10 +223,14 @@ jobs:
       - name: Test Coverage
         run: |
           . venv/bin/activate
-          python -m pytest --cov-report=xml --cov-report term-missing --cov=srpenergy tests/
+          python -m pytest --cov-report=xml --cov-report term-missing \
+            --cov=srpenergy --cov-fail-under=80 tests/
 
       - name: Report Coverage
-        if: startsWith(runner.os, 'Linux')
+        if: >-
+          startsWith(runner.os, 'Linux') &&
+          (github.event_name != 'pull_request' ||
+           github.event.pull_request.head.repo.full_name == github.repository)
         run: curl -sL https://coveralls.io/coveralls-linux.tar.gz | tar -xz && ./coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -269,3 +273,24 @@ jobs:
           . venv/bin/activate
           cd docs
           python -m sphinx -T -b html -d _build/doctrees -D language=en . _build/html
+
+  required-checks:
+    name: All required checks passed
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - linting
+      - pytest
+      - coverage
+      - docs
+    steps:
+      - name: Fail if any required job failed or was cancelled
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            echo "One or more required jobs failed."
+            exit 1
+          fi
+          if [[ "${{ contains(needs.*.result, 'cancelled') }}" == "true" ]]; then
+            echo "One or more required jobs were cancelled."
+            exit 1
+          fi
