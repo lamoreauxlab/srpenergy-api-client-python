@@ -92,8 +92,8 @@ unfixable = [
 
 [tool.ruff.lint.per-file-ignores]
 # Mirrors your [tool.bandit.assert_used] skips exactly
-"*_test.py"    = ["S101", "S105", "S106", "D"]  # assert + hardcoded creds ok in tests, skip docstrings
-"*/test_*.py"  = ["S101", "S105", "S106", "D"]
+"*_test.py"    = ["S101", "S105", "S106", "D", "PLR2004"]  # assert + hardcoded creds ok in tests, skip docstrings
+"*/test_*.py"  = ["S101", "S105", "S106", "D", "PLR2004"]
 "__init__.py"  = ["F401", "D104"]               # allow unused imports and missing docstring
 
 [tool.ruff.lint.isort]

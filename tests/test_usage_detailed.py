@@ -1,12 +1,13 @@
 """The tests for SrpEnergyClient.usage_detailed()."""
 
 from datetime import datetime
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from srpenergy.client import SrpEnergyClient
 
 from tests.common import (
     MOCK_LOGIN_RESPONSE,
+    MOCK_USAGE_STANDARD_RATE_RESPONSE,
     PATCH_GET,
     PATCH_POST,
     TEST_PASSWORD,
@@ -53,32 +54,8 @@ MOCK_USAGE_DETAILED_RESPONSE = {
     "demandList": (),
 }
 
-# A non-TOU (standard rate) hour: SRP populates totalKwh/totalCost directly
-# and all four tariff buckets are 0.
-MOCK_USAGE_DETAILED_STANDARD_RATE_RESPONSE = {
-    "hourlyUsageList": (
-        {
-            "date": "2019-10-09T00:00:00",
-            "hour": "2019-10-09T00:00:00",
-            "onPeakKwh": 0.0,
-            "offPeakKwh": 0.0,
-            "shoulderKwh": 0.0,
-            "superOffPeakKwh": 0.0,
-            "totalKwh": 0.4,
-            "onPeakCost": 0.0,
-            "offPeakCost": 0.0,
-            "shoulderCost": 0.0,
-            "superOffPeakCost": 0.0,
-            "totalCost": 0.08,
-        },
-    ),
-    "demandList": (),
-}
-
 ROUTES_DETAILED = [("usage/hourlydetail", MOCK_USAGE_DETAILED_RESPONSE)]
-ROUTES_DETAILED_STANDARD = [
-    ("usage/hourlydetail", MOCK_USAGE_DETAILED_STANDARD_RATE_RESPONSE)
-]
+ROUTES_DETAILED_STANDARD = [("usage/hourlydetail", MOCK_USAGE_STANDARD_RATE_RESPONSE)]
 
 
 def test_usage_detailed_returns_all_buckets_for_tou_account() -> None:
@@ -116,7 +93,8 @@ def test_usage_detailed_returns_all_buckets_for_tou_account() -> None:
 
 
 def test_usage_detailed_standard_rate_account_uses_total_fields() -> None:
-    """Test usage_detailed for a non-TOU account returns 0 buckets and a real total."""
+    """Test usage_detailed for a non-TOU account returns 0 buckets and a real
+    total."""
     with patch(PATCH_GET) as session_get, patch(PATCH_POST) as session_post:
         session_post.return_value = MOCK_LOGIN_RESPONSE
         session_get.side_effect = get_mock_requests(ROUTES_DETAILED_STANDARD)

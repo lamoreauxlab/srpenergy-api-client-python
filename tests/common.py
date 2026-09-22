@@ -50,35 +50,63 @@ MOCK_CLOUDFLARE_RESPONSE_TEXT = """<!DOCTYPE html>
     </style>
 \n</head>
 <body>
-    <div class="container">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 98.37 54.02" width="198.37" height="154.02">
-            <rect width="98.37" height="54.02" fill="none"/>
-            <g fill="#125590">
-                <path d="M28.51,18c0.06,0,0.62,0,0.62,0l9.64,3.9l-0.8,2.95H21.49C20.61,21.64,24.04,18,28.51,18z"/>
-                <polygon points="32.22,18 39.86,18 39.09,20.79"/>
-                <path d="M21.76,26.01h12.85c1.99,1.38,2.86,3.76,2.22,5.79c-1.17,3.7-5.42,4.19-5.98,4.19c0,0-9.34,0-12.81,0l1.78-6.41h5.4c0.04,0-1.39-0.8-2.26-1.76C22.21,26.99,21.76,26.01,21.76,26.01z"/>
-                <polygon points="46.1,24.84 39.42,24.84 40.1,22.45"/>
-                <polygon points="40.42,21.33 46.64,23.84 41.21,18.43"/>
-                <polygon points="42.4,18 45.87,18 47.58,23.17"/>
-                <polygon points="47.09,18 48.75,23.01 50.43,18"/>
-                <path d="M44.31,36h-7.98l2.75-9.99h17.41c0,0-0.43,0.95-1.01,1.48c-0.94,0.86-2.12,1.25-2.12,1.25l1.85,5.67l2.34-8.4H74.9c0,0-0.26,1.11-1.7,2.18c-1.58,1.17-3.85,1.6-4.91,1.6h-3.45l-0.52-1.89L62.07,36H48.29l-2.03-7L44.31,36z"/>
-                <path d="M51.4,24.84H57c0,0,0.12-0.57,0.15-1.16c0.02-0.58-0.04-1.13-0.04-1.13L51.4,24.84z"/>
-                <path d="M49.71,23.29l4.52-4.5c0,0-0.62-0.39-1.2-0.54C52.44,18.1,51.46,18,51.46,18L49.71,23.29z"/>
-                <path d="M55.22,19.42l-4.39,4.39l5.9-2.37c0,0-0.23-0.59-0.65-1.13C55.75,19.87,55.22,19.42,55.22,19.42z"/>
-                <polygon points="59.77,18 65.21,18 59.09,20.48"/>
-                <path d="M57.87,24.84l0.81-2.93L68.35,18h1.27c1.01,0,3.42,0.55,4.96,2.96c1.27,1.97,0.78,3.88,0.68,3.88H57.87z"/>
-                <path d="M76.02,20.42c0-1.19,0.97-2.15,2.17-2.15c1.19,0,2.15,0.97,2.15,2.15c0,1.19-0.97,2.17-2.15,2.17C76.99,22.59,76.02,21.62,76.02,20.42z M80.07,20.42c0-1.05-0.84-1.89-1.89-1.89c-1.06,0-1.9,0.84-1.9,1.89c0,1.06,0.84,1.9,1.9,1.9C79.23,22.32,80.07,21.48,80.07,20.42z"/>
-                <path d="M79.11,19.9c0-0.37-0.2-0.6-0.8-0.6h-0.99v2.26h0.26v-1.04h0.53l0.65,1.04h0.33l-0.68-1.04C78.8,20.51,79.11,20.35,79.11,19.9z M78.02,20.27h-0.44v-0.7h0.67c0.28,0,0.61,0.04,0.61,0.34C78.85,20.32,78.34,20.27,78.02,20.27z"/>
-            </g>
-        </svg>
+  <div class="container">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 98.37 54.02"
+         width="198.37"
+         height="154.02">
+      <rect width="98.37" height="54.02" fill="none"/>
+      <g fill="#125590">
+        <path d="M28.51,18c0.06,0,0.62,0,0.62,0l9.64,3.9l-0.8,2.95H21.49"
+              d-cont="C20.61,21.64,24.04,18,28.51,18z"/>
+        <polygon points="32.22,18 39.86,18 39.09,20.79"/>
+        <path d="M21.76,26.01h12.85c1.99,1.38,2.86,3.76,2.22,5.79"
+              d-cont="c-1.17,3.7-5.42,4.19-5.98,4.19c0,0-9.34,0-12.81,0"
+              d-cont2="l1.78-6.41h5.4c0.04,0-1.39-0.8-2.26-1.76"
+              d-cont3="C22.21,26.99,21.76,26.01,21.76,26.01z"/>
+        <polygon points="46.1,24.84 39.42,24.84 40.1,22.45"/>
+        <polygon points="40.42,21.33 46.64,23.84 41.21,18.43"/>
+        <polygon points="42.4,18 45.87,18 47.58,23.17"/>
+        <polygon points="47.09,18 48.75,23.01 50.43,18"/>
+        <path d="M44.31,36h-7.98l2.75-9.99h17.41c0,0-0.43,0.95-1.01,1.48"
+              d-cont="c-0.94,0.86-2.12,1.25-2.12,1.25l1.85,5.67l2.34-8.4"
+              d-cont2="H74.9c0,0-0.26,1.11-1.7,2.18c-1.58,1.17-3.85,1.6"
+              d-cont3="-4.91,1.6h-3.45l-0.52-1.89L62.07,36H48.29l-2.03-7"
+              d-cont4="L44.31,36z"/>
+        <path d="M51.4,24.84H57c0,0,0.12-0.57,0.15-1.16"
+              d-cont="c0.02-0.58-0.04-1.13-0.04-1.13L51.4,24.84z"/>
+        <path d="M49.71,23.29l4.52-4.5c0,0-0.62-0.39-1.2-0.54"
+              d-cont="C52.44,18.1,51.46,18,51.46,18L49.71,23.29z"/>
+        <path d="M55.22,19.42l-4.39,4.39l5.9-2.37c0,0-0.23-0.59-0.65-1.13"
+              d-cont="C55.75,19.87,55.22,19.42,55.22,19.42z"/>
+        <polygon points="59.77,18 65.21,18 59.09,20.48"/>
+        <path d="M57.87,24.84l0.81-2.93L68.35,18h1.27"
+              d-cont="c1.01,0,3.42,0.55,4.96,2.96c1.27,1.97,0.78,3.88"
+              d-cont2=",0.68,3.88H57.87z"/>
+        <path d="M76.02,20.42c0-1.19,0.97-2.15,2.17-2.15"
+              d-cont="c1.19,0,2.15,0.97,2.15,2.15c0,1.19-0.97,2.17"
+              d-cont2="-2.15,2.17C76.99,22.59,76.02,21.62,76.02,20.42z "
+              d-cont3="M80.07,20.42c0-1.05-0.84-1.89-1.89-1.89"
+              d-cont4="c-1.06,0-1.9,0.84-1.9,1.89c0,1.06,0.84,1.9,1.9"
+              d-cont5=",1.9C79.23,22.32,80.07,21.48,80.07,20.42z"/>
+        <path d="M79.11,19.9c0-0.37-0.2-0.6-0.8-0.6h-0.99v2.26h0.26"
+              d-cont="v-1.04h0.53l0.65,1.04h0.33l-0.68-1.04"
+              d-cont2="C78.8,20.51,79.11,20.35,79.11,19.9z "
+              d-cont3="M78.02,20.27h-0.44v-0.7h0.67c0.28,0,0.61,0.04"
+              d-cont4=",0.61,0.34C78.85,20.32,78.34,20.27,78.02,20.27z"/>
+      </g>
+    </svg>
 
-        <h1>Access Denied</h1>
-        <p>You are not authorized to access this webpage.</p>
-        <p>If you believe this is an error, please reach out to your administrator or SRP contact.</p>
+    <h1>Access Denied</h1>
+    <p>You are not authorized to access this webpage.</p>
+    <p>
+      If you believe this is an error, please reach out to your
+      administrator or SRP contact.
+    </p>
 
-        <p><strong>Ray ID:</strong>omitted</p>
-        <p><strong>Your IP:</strong>omitted</p>
-    </div>
+    <p><strong>Ray ID:</strong> omitted</p>
+    <p><strong>Your IP:</strong> omitted</p>
+  </div>
 </body>
 </html>
 """
@@ -88,6 +116,26 @@ MOCK_ANTI_FORGERY_RESPONSE = {"message": "Success"}
 
 MOCK_ANTI_FORGERY_RESPONSE_COOKIES = {
     "xsrf-token": "CfDJ8KUcoIlbMHV_NbT4uDyb-XA2%7C207f"
+}
+
+HOURLY_USAGE_MOCK_ITEM = {
+    "date": "2019-10-09T00:00:00",
+    "hour": "2019-10-09T00:00:00",
+    "onPeakKwh": 0.0,
+    "offPeakKwh": 0.0,
+    "shoulderKwh": 0.0,
+    "superOffPeakKwh": 0.0,
+    "totalKwh": 0.4,
+    "onPeakCost": 0.0,
+    "offPeakCost": 0.0,
+    "shoulderCost": 0.0,
+    "superOffPeakCost": 0.0,
+    "totalCost": 0.08,
+}
+
+MOCK_USAGE_STANDARD_RATE_RESPONSE = {
+    "hourlyUsageList": (HOURLY_USAGE_MOCK_ITEM,),
+    "demandList": (),
 }
 
 # Note: hardcoded TOU rate constants removed along with get_rate()
@@ -130,7 +178,8 @@ def get_mock_requests(routes, antiforgery_status=200, antiforgery_cookies=None):
 
     Args:
         routes: List of (pattern, response) tuples.
-        antiforgery_status: HTTP status code to return for the antiforgery request (default 200).
+        antiforgery_status: HTTP status code to return for the antiforgery
+        request (default 200).
         antiforgery_cookies: Cookies to return for the antiforgery request.
                              Defaults to MOCK_ANTI_FORGERY_RESPONSE_COOKIES.
                              Pass {} to simulate missing xsrf-token.
